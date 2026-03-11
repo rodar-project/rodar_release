@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-03-11
+
 ### Added
 
 - Mix task `mix rodar_release` for automated semantic version releases
