@@ -4,6 +4,11 @@
 
 ## [0.2.0] - 2026-03-21
 
+### Added
+
+- `mix rodar_release rollback` command to undo the last release
+- `mix rodar_release amend` command to fold changes into the last release commit
+
 ## [0.1.0] - 2026-03-11
 
 ### Added

@@ -50,7 +50,7 @@ defmodule Mix.Tasks.RodarRelease.AmendTest do
 
         {original_sha, 0} = System.cmd("git", ["rev-parse", "HEAD"])
 
-        Mix.Tasks.RodarRelease.Amend.run([])
+        Mix.Tasks.RodarRelease.run(["amend"])
 
         # Commit message should be unchanged
         {log, 0} = System.cmd("git", ["log", "-1", "--format=%s"])
@@ -76,7 +76,7 @@ defmodule Mix.Tasks.RodarRelease.AmendTest do
 
         {original_sha, 0} = System.cmd("git", ["rev-parse", "HEAD"])
 
-        Mix.Tasks.RodarRelease.Amend.run(["--dry-run"])
+        Mix.Tasks.RodarRelease.run(["amend", "--dry-run"])
 
         # SHA should NOT have changed
         {new_sha, 0} = System.cmd("git", ["rev-parse", "HEAD"])
@@ -93,7 +93,7 @@ defmodule Mix.Tasks.RodarRelease.AmendTest do
         git!(["commit", "-m", "not a release"])
 
         assert_raise Mix.Error, ~r/Latest commit is not a release commit/, fn ->
-          Mix.Tasks.RodarRelease.Amend.run([])
+          Mix.Tasks.RodarRelease.run(["amend"])
         end
       end)
     end
@@ -101,7 +101,7 @@ defmodule Mix.Tasks.RodarRelease.AmendTest do
     test "raises when working tree is clean" do
       in_dir(fn ->
         assert_raise Mix.Error, ~r/No changes to amend/, fn ->
-          Mix.Tasks.RodarRelease.Amend.run([])
+          Mix.Tasks.RodarRelease.run(["amend"])
         end
       end)
     end

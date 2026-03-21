@@ -59,7 +59,7 @@ defmodule Mix.Tasks.RodarRelease.RollbackTest do
   describe "rollback --dry-run" do
     test "shows what would happen without making changes" do
       in_dir(fn ->
-        Mix.Tasks.RodarRelease.Rollback.run(["--dry-run"])
+        Mix.Tasks.RodarRelease.run(["rollback", "--dry-run"])
 
         # Tag and commit should still exist
         {tags, 0} = System.cmd("git", ["tag"])
@@ -74,7 +74,7 @@ defmodule Mix.Tasks.RodarRelease.RollbackTest do
   describe "rollback (soft)" do
     test "removes tag and resets commit, restores files" do
       in_dir(fn ->
-        Mix.Tasks.RodarRelease.Rollback.run([])
+        Mix.Tasks.RodarRelease.run(["rollback"])
 
         # Tag should be gone
         {tags, 0} = System.cmd("git", ["tag"])
@@ -93,7 +93,7 @@ defmodule Mix.Tasks.RodarRelease.RollbackTest do
   describe "rollback --hard" do
     test "removes tag and discards all release changes" do
       in_dir(fn ->
-        Mix.Tasks.RodarRelease.Rollback.run(["--hard"])
+        Mix.Tasks.RodarRelease.run(["rollback", "--hard"])
 
         # Tag should be gone
         {tags, 0} = System.cmd("git", ["tag"])
@@ -117,7 +117,7 @@ defmodule Mix.Tasks.RodarRelease.RollbackTest do
         git!(["commit", "-m", "not a release"])
 
         assert_raise Mix.Error, ~r/Latest commit is not a release commit/, fn ->
-          Mix.Tasks.RodarRelease.Rollback.run([])
+          Mix.Tasks.RodarRelease.run(["rollback"])
         end
       end)
     end
