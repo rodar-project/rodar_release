@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-03-21
+
 ### Added
 
 - `mix rodar_release.publish` command to publish the current version to Hex
