@@ -12,7 +12,14 @@ defmodule RodarRelease do
       mix rodar_release minor              # release as minor bump
       mix rodar_release major --publish    # release + publish to hex
 
-  See `Mix.Tasks.RodarRelease` for details.
+  ## Rollback & Amend
+
+      mix rodar_release.rollback           # undo last release (soft reset)
+      mix rodar_release.rollback --hard    # undo and discard changes
+      mix rodar_release.amend              # fold changes into release commit
+
+  See `Mix.Tasks.RodarRelease`, `Mix.Tasks.RodarRelease.Rollback`,
+  and `Mix.Tasks.RodarRelease.Amend` for details.
   """
 
   @version_pattern ~r/version:\s*"(\d+\.\d+\.\d+)"/
