@@ -3,22 +3,26 @@ defmodule RodarRelease do
   Version management and release utilities.
 
   The version lives directly in `mix.exs` as the single source of truth.
-  At release time, `mix rodar_release patch|minor|major` bumps it, updates
+  At release time, `mix rodar_release.patch|minor|major` bumps it, updates
   CHANGELOG.md, commits, and tags.
 
   ## Releasing
 
-      mix rodar_release patch --dry-run    # preview
-      mix rodar_release minor              # release as minor bump
-      mix rodar_release major --publish    # release + publish to hex
+      mix rodar_release.patch --dry-run    # preview
+      mix rodar_release.minor              # release as minor bump
+      mix rodar_release.major --publish    # release + publish to hex
+
+  ## Publishing
+
+      mix rodar_release.publish            # publish current version to Hex
 
   ## Rollback & Amend
 
-      mix rodar_release rollback           # undo last release (soft reset)
-      mix rodar_release rollback --hard    # undo and discard changes
-      mix rodar_release amend              # fold changes into release commit
+      mix rodar_release.rollback           # undo last release (soft reset)
+      mix rodar_release.rollback --hard    # undo and discard changes
+      mix rodar_release.amend              # fold changes into release commit
 
-  See `Mix.Tasks.RodarRelease` for details.
+  Run `mix help rodar_release` for the full list of commands.
   """
 
   @version_pattern ~r/version:\s*"(\d+\.\d+\.\d+)"/

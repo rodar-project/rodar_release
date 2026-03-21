@@ -4,7 +4,11 @@
 
 ### Added
 
-- `mix rodar_release publish` command to publish the current version to Hex
+- `mix rodar_release.publish` command to publish the current version to Hex
+
+### Changed
+
+- Refactored to idiomatic Elixir dot notation (`mix rodar_release.patch` instead of `mix rodar_release patch`)
 
 ## [0.2.1] - 2026-03-21
 

@@ -17,7 +17,8 @@ end
 ## Usage
 
 ```bash
-mix rodar_release <command> [options]
+mix rodar_release              # list available commands
+mix help rodar_release.patch   # help for a specific command
 ```
 
 ### Commands
@@ -25,11 +26,11 @@ mix rodar_release <command> [options]
 #### Release
 
 ```bash
-mix rodar_release patch              # 1.0.8 -> 1.0.9
-mix rodar_release minor              # 1.0.8 -> 1.1.0
-mix rodar_release major              # 1.0.8 -> 2.0.0
-mix rodar_release minor --dry-run    # preview changes
-mix rodar_release major --publish    # release + publish to Hex
+mix rodar_release.patch              # 1.0.8 -> 1.0.9
+mix rodar_release.minor              # 1.0.8 -> 1.1.0
+mix rodar_release.major              # 1.0.8 -> 2.0.0
+mix rodar_release.minor --dry-run    # preview changes
+mix rodar_release.major --publish    # release + publish to Hex
 ```
 
 1. Validates the git working directory is clean
@@ -42,8 +43,8 @@ mix rodar_release major --publish    # release + publish to Hex
 #### Publish
 
 ```bash
-mix rodar_release publish              # publish current version to Hex
-mix rodar_release publish --dry-run    # preview publish
+mix rodar_release.publish              # publish current version to Hex
+mix rodar_release.publish --dry-run    # preview publish
 ```
 
 Publishes the current version to Hex. Useful when you've already bumped and tagged a release but deferred publishing.
@@ -51,9 +52,9 @@ Publishes the current version to Hex. Useful when you've already bumped and tagg
 #### Rollback
 
 ```bash
-mix rodar_release rollback           # undo last release (soft reset)
-mix rodar_release rollback --hard    # undo and discard changes
-mix rodar_release rollback --dry-run # preview rollback
+mix rodar_release.rollback           # undo last release (soft reset)
+mix rodar_release.rollback --hard    # undo and discard changes
+mix rodar_release.rollback --dry-run # preview rollback
 ```
 
 Undoes the last release by deleting its tag and resetting the release commit. Requires the latest commit to be a release commit (`release: vX.Y.Z`).
@@ -64,19 +65,19 @@ Undoes the last release by deleting its tag and resetting the release commit. Re
 #### Amend
 
 ```bash
-mix rodar_release amend              # fold changes into release commit
-mix rodar_release amend --dry-run    # preview amend
+mix rodar_release.amend              # fold changes into release commit
+mix rodar_release.amend --dry-run    # preview amend
 ```
 
 Amends the last release commit with any current changes and re-tags. Useful for fixing a typo or adding a missing file right after releasing.
 
 ### Options
 
-| Option      | Applies to          | Description                              |
-|-------------|---------------------|------------------------------------------|
-| `--dry-run` | all commands        | Preview changes without applying them    |
-| `--publish` | patch, minor, major | Publish to Hex after tagging              |
-| `--hard`    | rollback            | Discard release changes entirely         |
+| Option      | Applies to          | Description                           |
+|-------------|---------------------|---------------------------------------|
+| `--dry-run` | all commands        | Preview changes without applying them |
+| `--publish` | patch, minor, major | Publish to Hex after tagging          |
+| `--hard`    | rollback            | Discard release changes entirely      |
 
 ### Programmatic API
 
@@ -89,4 +90,3 @@ RodarRelease.bump("1.2.3", :minor)
 
 RodarRelease.write_version("1.3.0")
 ```
-
