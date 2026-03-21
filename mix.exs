@@ -21,6 +21,7 @@ defmodule RodarRelease.MixProject do
 
   defp package do
     [
+      maintainers: ["Rodrigo Couto <r@rodg.co>"],
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/rodar-project/rodar_release"},
       files: ~w(lib mix.exs README.md LICENSE CHANGELOG.md)
