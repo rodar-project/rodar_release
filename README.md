@@ -39,6 +39,15 @@ mix rodar_release major --publish    # release + publish to Hex
 5. Creates an annotated git tag `vX.Y.Z`
 6. Optionally publishes to Hex
 
+#### Publish
+
+```bash
+mix rodar_release publish              # publish current version to Hex
+mix rodar_release publish --dry-run    # preview publish
+```
+
+Publishes the current version to Hex. Useful when you've already bumped and tagged a release but deferred publishing.
+
 #### Rollback
 
 ```bash
@@ -66,7 +75,7 @@ Amends the last release commit with any current changes and re-tags. Useful for 
 | Option      | Applies to          | Description                              |
 |-------------|---------------------|------------------------------------------|
 | `--dry-run` | all commands        | Preview changes without applying them    |
-| `--publish` | patch, minor, major | Publish to Hex after tagging             |
+| `--publish` | patch, minor, major | Publish to Hex after tagging              |
 | `--hard`    | rollback            | Discard release changes entirely         |
 
 ### Programmatic API

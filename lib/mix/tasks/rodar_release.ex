@@ -13,6 +13,7 @@ defmodule Mix.Tasks.RodarRelease do
     * `patch`    - bump the patch version and release
     * `minor`    - bump the minor version and release
     * `major`    - bump the major version and release
+    * `publish`  - publish the current version to Hex
     * `rollback` - undo the last release (delete tag, reset commit)
     * `amend`    - fold current changes into the last release commit and re-tag
 
@@ -21,6 +22,7 @@ defmodule Mix.Tasks.RodarRelease do
       mix rodar_release patch              # 1.0.8 -> 1.0.9
       mix rodar_release minor --dry-run    # preview minor bump
       mix rodar_release major --publish    # release + publish to Hex
+      mix rodar_release publish            # publish current version to Hex
       mix rodar_release rollback           # undo last release (soft reset)
       mix rodar_release rollback --hard    # undo and discard changes
       mix rodar_release amend              # fold changes into release commit
@@ -51,6 +53,9 @@ defmodule Mix.Tasks.RodarRelease do
       [cmd] when cmd in ~w(patch minor major) ->
         run_bump(String.to_atom(cmd), opts)
 
+      ["publish"] ->
+        run_publish(opts)
+
       ["rollback"] ->
         run_rollback(opts)
 
@@ -59,7 +64,7 @@ defmodule Mix.Tasks.RodarRelease do
 
       _ ->
         Mix.raise(
-          "Usage: mix rodar_release <patch|minor|major|rollback|amend> [--dry-run] [--publish] [--hard]"
+          "Usage: mix rodar_release <patch|minor|major|publish|rollback|amend> [--dry-run] [--publish] [--hard]"
         )
     end
   end
@@ -128,6 +133,28 @@ defmodule Mix.Tasks.RodarRelease do
     Mix.shell().info("")
     Mix.shell().info("Next steps:")
     Mix.shell().info("  git push origin main --tags")
+  end
+
+  # --- Publish ---
+
+  defp run_publish(opts) do
+    dry_run = Keyword.get(opts, :dry_run, false)
+    current_version = RodarRelease.read_version()
+
+    Mix.shell().info("Publish plan:")
+    Mix.shell().info("  Version: #{current_version}")
+    Mix.shell().info("")
+
+    if dry_run do
+      Mix.shell().info("[dry-run] Would publish v#{current_version} to Hex")
+    else
+      step("Publishing v#{current_version} to Hex", fn ->
+        mix!(["hex.publish", "--yes"])
+      end)
+
+      Mix.shell().info("")
+      Mix.shell().info("Published v#{current_version} to Hex!")
+    end
   end
 
   # --- Rollback ---
