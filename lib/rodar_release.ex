@@ -6,15 +6,22 @@ defmodule RodarRelease do
   At release time, `mix rodar_release.patch|minor|major` bumps it, updates
   CHANGELOG.md, commits, and tags.
 
+  ## Semantic Versioning
+
+  Versions follow [Semantic Versioning](https://semver.org) (`MAJOR.MINOR.PATCH`):
+
+    * `:patch` — backward-compatible bug fixes
+    * `:minor` — new functionality, backward-compatible
+    * `:major` — breaking changes
+
+  Pre-release and build metadata (e.g. `1.0.0-rc.1`) are not currently supported.
+
   ## Releasing
 
+      mix rodar_release.patch              # bug fix
+      mix rodar_release.minor              # new feature
+      mix rodar_release.major              # breaking change
       mix rodar_release.patch --dry-run    # preview
-      mix rodar_release.minor              # release as minor bump
-      mix rodar_release.major --publish    # release + publish to hex
-
-  ## Publishing
-
-      mix rodar_release.publish            # publish current version to Hex
 
   ## Rollback & Amend
 

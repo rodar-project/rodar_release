@@ -4,14 +4,14 @@ defmodule Mix.Tasks.RodarRelease.Major do
   @moduledoc """
   Bumps the major version and creates a release.
 
+  Use when introducing breaking changes that require consumers to update their code.
+
       mix rodar_release.major              # 1.0.8 -> 2.0.0
       mix rodar_release.major --dry-run    # preview changes
-      mix rodar_release.major --publish    # release + publish to Hex
 
   ## Options
 
     * `--dry-run` - show what would happen without making any changes
-    * `--publish` - publish to Hex after tagging
   """
 
   use Mix.Task

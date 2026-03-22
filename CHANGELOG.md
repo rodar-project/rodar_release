@@ -10,10 +10,6 @@
 
 ## [1.0.0] - 2026-03-21
 
-### Added
-
-- `mix rodar_release.publish` command to publish the current version to Hex
-
 ### Changed
 
 - Refactored to idiomatic Elixir dot notation (`mix rodar_release.patch` instead of `mix rodar_release patch`)
@@ -36,4 +32,3 @@
 - Changelog update support with ISO 8601 release dates
 - Git commit and annotated tag creation
 - `--dry-run` option to preview changes
-- `--publish` option for Hex publishing

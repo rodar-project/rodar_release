@@ -1,6 +1,6 @@
 # RodarRelease
 
-Version management and release utilities for Rodar projects. Automates semantic version bumping, changelog updates, git commits/tags, and Hex publishing.
+Version management and release utilities for Rodar projects. Automates semantic version bumping, changelog updates, git commits/tags.
 
 ## Installation
 
@@ -14,6 +14,16 @@ def deps do
 end
 ```
 
+## Semantic Versioning
+
+This tool follows [Semantic Versioning](https://semver.org) (`MAJOR.MINOR.PATCH`):
+
+- **Patch** (`mix rodar_release.patch`) — backward-compatible bug fixes. Use when you fix a bug without changing the public API.
+- **Minor** (`mix rodar_release.minor`) — new functionality that is backward-compatible. Use when you add a feature, deprecate something, or make non-breaking changes.
+- **Major** (`mix rodar_release.major`) — breaking changes. Use when you remove or change existing behavior in a way that requires consumers to update their code.
+
+> Pre-release identifiers (e.g. `1.0.0-rc.1`) and build metadata (e.g. `1.0.0+build.42`) are part of the semver spec but are not currently supported by this tool.
+
 ## Usage
 
 ```bash
@@ -26,11 +36,10 @@ mix help rodar_release.patch   # help for a specific command
 #### Release
 
 ```bash
-mix rodar_release.patch              # 1.0.8 -> 1.0.9
-mix rodar_release.minor              # 1.0.8 -> 1.1.0
-mix rodar_release.major              # 1.0.8 -> 2.0.0
+mix rodar_release.patch              # bug fix:        1.0.8 -> 1.0.9
+mix rodar_release.minor              # new feature:    1.0.8 -> 1.1.0
+mix rodar_release.major              # breaking change: 1.0.8 -> 2.0.0
 mix rodar_release.minor --dry-run    # preview changes
-mix rodar_release.major --publish    # release + publish to Hex
 ```
 
 1. Validates the git working directory is clean
@@ -38,16 +47,6 @@ mix rodar_release.major --publish    # release + publish to Hex
 3. Updates `CHANGELOG.md` with the release date
 4. Commits changes with message `release: vX.Y.Z`
 5. Creates an annotated git tag `vX.Y.Z`
-6. Optionally publishes to Hex
-
-#### Publish
-
-```bash
-mix rodar_release.publish              # publish current version to Hex
-mix rodar_release.publish --dry-run    # preview publish
-```
-
-Publishes the current version to Hex. Useful when you've already bumped and tagged a release but deferred publishing.
 
 #### Rollback
 
@@ -76,7 +75,6 @@ Amends the last release commit with any current changes and re-tags. Useful for 
 | Option      | Applies to          | Description                           |
 |-------------|---------------------|---------------------------------------|
 | `--dry-run` | all commands        | Preview changes without applying them |
-| `--publish` | patch, minor, major | Publish to Hex after tagging          |
 | `--hard`    | rollback            | Discard release changes entirely      |
 
 ### Programmatic API

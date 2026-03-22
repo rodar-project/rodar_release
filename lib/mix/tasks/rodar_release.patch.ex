@@ -4,14 +4,14 @@ defmodule Mix.Tasks.RodarRelease.Patch do
   @moduledoc """
   Bumps the patch version and creates a release.
 
+  Use for backward-compatible bug fixes that don't add new functionality.
+
       mix rodar_release.patch              # 1.0.8 -> 1.0.9
       mix rodar_release.patch --dry-run    # preview changes
-      mix rodar_release.patch --publish    # release + publish to Hex
 
   ## Options
 
     * `--dry-run` - show what would happen without making any changes
-    * `--publish` - publish to Hex after tagging
   """
 
   use Mix.Task

@@ -9,7 +9,6 @@ defmodule Mix.Tasks.RodarRelease do
       mix rodar_release.patch      - bump the patch version and release
       mix rodar_release.minor      - bump the minor version and release
       mix rodar_release.major      - bump the major version and release
-      mix rodar_release.publish    - publish the current version to Hex
       mix rodar_release.rollback   - undo the last release
       mix rodar_release.amend      - fold changes into the last release commit
 
