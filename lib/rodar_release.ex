@@ -24,8 +24,13 @@ defmodule RodarRelease do
       mix rodar_release.patch --dry-run    # preview
 
   If `CHANGELOG.md` has no entries under `[Unreleased]`, the release task will
-  offer to generate one using Claude Code based on the git history since the
+  offer to generate one using an AI CLI based on the git history since the
   last tag. You are prompted to confirm before anything is written.
+
+  The AI CLI defaults to Claude Code (`{"claude", ["-p"]}`) and can be
+  configured via:
+
+      config :rodar_release, :ai_cmd, {"ollama", ["run", "llama3"]}
 
   ## Rollback & Amend
 

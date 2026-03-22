@@ -51,7 +51,16 @@ mix rodar_release.minor --dry-run    # preview changes
 
 #### AI-generated changelog
 
-When releasing with an empty `[Unreleased]` section, the tool gathers the git log and diff since the last tag and asks Claude to suggest a changelog entry using [Keep a Changelog](https://keepachangelog.com) headings (`### Added`, `### Changed`, `### Fixed`, `### Removed`). You are prompted to confirm before anything is written.
+When releasing with an empty `[Unreleased]` section, the tool gathers the git log and diff since the last tag and asks an AI CLI to suggest a changelog entry using [Keep a Changelog](https://keepachangelog.com) headings (`### Added`, `### Changed`, `### Fixed`, `### Removed`). You are prompted to confirm before anything is written.
+
+By default it uses [Claude Code](https://claude.com/claude-code). To use a different AI CLI, configure the command and args in your `config.exs`:
+
+```elixir
+config :rodar_release, :ai_cmd, {"claude", ["-p"]}       # default
+config :rodar_release, :ai_cmd, {"ollama", ["run", "llama3"]}  # example
+```
+
+The prompt is appended as the last argument.
 
 #### Rollback
 

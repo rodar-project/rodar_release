@@ -116,10 +116,17 @@ defmodule RodarRelease.Helpers do
     #{diff}
     """
 
-    case System.cmd("claude", ["-p", prompt], stderr_to_stdout: true) do
+    {cmd, args} = ai_cmd()
+    args = args ++ [prompt]
+
+    case System.cmd(cmd, args, stderr_to_stdout: true) do
       {output, 0} -> {:ok, String.trim(output)}
       {output, _} -> {:error, String.trim(output)}
     end
+  end
+
+  defp ai_cmd do
+    Application.get_env(:rodar_release, :ai_cmd, {"claude", ["-p"]})
   end
 
   def mix!(args) do
