@@ -2,21 +2,53 @@
 
 ## [Unreleased]
 
+### Added
+
+- AI-generated changelog entries via Claude Code when `[Unreleased]` is empty at release time
+
+### Removed
+
+- `mix rodar_release.publish` task and `--publish` flag (use `mix hex.publish` directly)
+
 ## [1.1.0] - 2026-03-22
+
+### Removed
+
+- `mix rodar_release.publish` task and `--publish` option from release commands
+
+### Added
+
+- Semantic versioning documentation to README and module docs
 
 ## [1.0.3] - 2026-03-21
 
+### Added
+
+- `ex_doc` as a dev dependency for documentation generation
+
 ## [1.0.2] - 2026-03-21
 
+### Changed
+
+- Add maintainer info to package metadata
+
 ## [1.0.1] - 2026-03-21
+
+### Added
+
+- MIT license and Hex package metadata for publishing
 
 ## [1.0.0] - 2026-03-21
 
 ### Changed
 
-- Refactored to idiomatic Elixir dot notation (`mix rodar_release.patch` instead of `mix rodar_release patch`)
+- Refactored mix tasks to use idiomatic Elixir dot notation (e.g., `mix rodar_release.patch` instead of `mix rodar_release patch`)
 
 ## [0.2.1] - 2026-03-21
+
+### Changed
+
+- Consolidated `rollback` and `amend` into subcommands of the unified `mix rodar_release` task
 
 ## [0.2.0] - 2026-03-21
 

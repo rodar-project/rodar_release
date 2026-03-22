@@ -23,6 +23,10 @@ defmodule RodarRelease do
       mix rodar_release.major              # breaking change
       mix rodar_release.patch --dry-run    # preview
 
+  If `CHANGELOG.md` has no entries under `[Unreleased]`, the release task will
+  offer to generate one using Claude Code based on the git history since the
+  last tag. You are prompted to confirm before anything is written.
+
   ## Rollback & Amend
 
       mix rodar_release.rollback           # undo last release (soft reset)

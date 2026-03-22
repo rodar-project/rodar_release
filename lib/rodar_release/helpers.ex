@@ -49,6 +49,79 @@ defmodule RodarRelease.Helpers do
     File.write!(@changelog_file, updated)
   end
 
+  def maybe_generate_changelog_entry do
+    content = File.read!(@changelog_file)
+
+    if unreleased_empty?(content) do
+      Mix.shell().info("Changelog has no entries under [Unreleased].")
+
+      case generate_changelog_entry() do
+        {:ok, entry} ->
+          Mix.shell().info("")
+          Mix.shell().info("Suggested changelog entry:")
+          Mix.shell().info("")
+          Mix.shell().info(entry)
+          Mix.shell().info("")
+
+          if Mix.shell().yes?("Add this entry to the changelog?") do
+            updated =
+              String.replace(content, "## [Unreleased]", "## [Unreleased]\n\n#{entry}",
+                global: false
+              )
+
+            File.write!(@changelog_file, updated)
+            Mix.shell().info("Changelog updated.")
+          end
+
+        {:error, reason} ->
+          Mix.shell().info("Could not generate changelog entry: #{reason}")
+      end
+    end
+  end
+
+  defp unreleased_empty?(content) do
+    case String.split(content, "## [Unreleased]", parts: 2) do
+      [_, after_unreleased] ->
+        after_unreleased
+        |> String.split(~r/^## \[/m, parts: 2)
+        |> List.first()
+        |> String.trim()
+        |> Kernel.==("")
+
+      _ ->
+        false
+    end
+  end
+
+  defp generate_changelog_entry do
+    {last_tag, 0} = System.cmd("git", ["describe", "--tags", "--abbrev=0"])
+    last_tag = String.trim(last_tag)
+
+    {log, 0} = System.cmd("git", ["log", "#{last_tag}..HEAD", "--pretty=format:%s"])
+    {diff, 0} = System.cmd("git", ["diff", "#{last_tag}..HEAD"])
+
+    prompt = """
+    Based on the following git commits and diff since #{last_tag}, write a short changelog entry.
+
+    Use the appropriate Keep a Changelog heading(s): ### Added, ### Changed, ### Fixed, ### Removed.
+    Each entry should be a single concise bullet point.
+    Output ONLY the markdown heading(s) and bullet(s), nothing else.
+
+    ## Commits
+
+    #{log}
+
+    ## Diff
+
+    #{diff}
+    """
+
+    case System.cmd("claude", ["-p", prompt], stderr_to_stdout: true) do
+      {output, 0} -> {:ok, String.trim(output)}
+      {output, _} -> {:error, String.trim(output)}
+    end
+  end
+
   def mix!(args) do
     case System.cmd("mix", args, stderr_to_stdout: true) do
       {output, 0} ->

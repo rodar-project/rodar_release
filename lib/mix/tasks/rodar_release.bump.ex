@@ -35,6 +35,8 @@ defmodule Mix.Tasks.RodarRelease.Bump do
   end
 
   defp execute_release(release_version, today) do
+    maybe_generate_changelog_entry()
+
     step("Updating mix.exs version to #{release_version}", fn ->
       RodarRelease.write_version(release_version)
     end)

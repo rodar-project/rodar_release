@@ -43,10 +43,15 @@ mix rodar_release.minor --dry-run    # preview changes
 ```
 
 1. Validates the git working directory is clean
-2. Bumps the version in `mix.exs`
-3. Updates `CHANGELOG.md` with the release date
-4. Commits changes with message `release: vX.Y.Z`
-5. Creates an annotated git tag `vX.Y.Z`
+2. If `[Unreleased]` in `CHANGELOG.md` is empty, offers to generate an entry using [Claude Code](https://claude.com/claude-code) (requires `claude` CLI)
+3. Bumps the version in `mix.exs`
+4. Updates `CHANGELOG.md` with the release date
+5. Commits changes with message `release: vX.Y.Z`
+6. Creates an annotated git tag `vX.Y.Z`
+
+#### AI-generated changelog
+
+When releasing with an empty `[Unreleased]` section, the tool gathers the git log and diff since the last tag and asks Claude to suggest a changelog entry using [Keep a Changelog](https://keepachangelog.com) headings (`### Added`, `### Changed`, `### Fixed`, `### Removed`). You are prompted to confirm before anything is written.
 
 #### Rollback
 
