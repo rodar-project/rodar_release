@@ -9,13 +9,23 @@ defmodule RodarRelease.MixProject do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       description: "Version management and release utilities for Rodar projects",
-      package: package()
+      package: package(),
+      docs: docs(),
+      source_url: "https://github.com/rodar-project/rodar_release",
+      homepage_url: "https://github.com/rodar-project/rodar_release"
     ]
   end
 
   def application do
     [
       extra_applications: [:logger]
+    ]
+  end
+
+  defp docs do
+    [
+      main: "RodarRelease",
+      extras: ["README.md", "CHANGELOG.md"]
     ]
   end
 
