@@ -40,7 +40,8 @@ defmodule RodarRelease.MixProject do
 
   defp deps do
     [
-      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
+      {:igniter, "~> 0.6", optional: true}
     ]
   end
 end

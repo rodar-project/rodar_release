@@ -14,6 +14,20 @@ def deps do
 end
 ```
 
+### With Igniter
+
+If your project uses [Igniter](https://hex.pm/packages/igniter), you can install with automatic setup:
+
+```bash
+mix igniter.install rodar_release
+```
+
+This creates a `CHANGELOG.md` with the standard [Keep a Changelog](https://keepachangelog.com) structure if one doesn't exist. To also configure a custom AI CLI:
+
+```bash
+mix igniter.install rodar_release --ai-cmd gemini
+```
+
 ## Semantic Versioning
 
 This tool follows [Semantic Versioning](https://semver.org) (`MAJOR.MINOR.PATCH`):
@@ -56,8 +70,9 @@ When releasing with an empty `[Unreleased]` section, the tool gathers the git lo
 By default it uses [Claude Code](https://claude.com/claude-code). To use a different AI CLI, configure the command and args in your `config.exs`:
 
 ```elixir
-config :rodar_release, :ai_cmd, {"claude", ["-p"]}       # default
-config :rodar_release, :ai_cmd, {"ollama", ["run", "llama3"]}  # example
+config :rodar_release, :ai_cmd, {"claude", ["-p"]}   # default
+config :rodar_release, :ai_cmd, {"gemini", ["-p"]}   # Gemini CLI
+config :rodar_release, :ai_cmd, {"codex", ["e"]}     # OpenAI Codex
 ```
 
 The prompt is appended as the last argument.

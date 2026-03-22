@@ -32,6 +32,12 @@ defmodule RodarRelease do
 
       config :rodar_release, :ai_cmd, {"ollama", ["run", "llama3"]}
 
+  ## Installation
+
+  If your project uses [Igniter](https://hex.pm/packages/igniter):
+
+      mix igniter.install rodar_release
+
   ## Rollback & Amend
 
       mix rodar_release.rollback           # undo last release (soft reset)

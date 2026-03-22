@@ -5,6 +5,7 @@
 ### Added
 
 - AI-generated changelog entries via Claude Code when `[Unreleased]` is empty at release time
+- Igniter integration for automatic project setup (`mix igniter.install rodar_release`)
 
 ### Removed
 
