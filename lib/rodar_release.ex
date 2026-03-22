@@ -38,6 +38,15 @@ defmodule RodarRelease do
 
       mix igniter.install rodar_release
 
+  Otherwise, create a `CHANGELOG.md` with the
+  [Keep a Changelog](https://keepachangelog.com) structure and optionally
+  configure `:ai_cmd` in `config/config.exs`:
+
+      config :rodar_release, :ai_cmd, {"gemini", ["-p"]}
+
+  See the [README](https://github.com/rodar-project/rodar_release#without-igniter)
+  for full manual setup instructions.
+
   ## Rollback & Amend
 
       mix rodar_release.rollback           # undo last release (soft reset)
