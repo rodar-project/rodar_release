@@ -28,6 +28,48 @@ This creates a `CHANGELOG.md` with the standard [Keep a Changelog](https://keepa
 mix igniter.install rodar_release --ai-cmd gemini
 ```
 
+### Without Igniter
+
+If your project does not use Igniter, follow these steps after adding the dependency:
+
+1. **Create `CHANGELOG.md`** in your project root with the [Keep a Changelog](https://keepachangelog.com) structure:
+
+    ```markdown
+    # Changelog
+
+    All notable changes to this project will be documented in this file.
+
+    The format is based on [Keep a Changelog](https://keepachangelog.com),
+    and this project adheres to [Semantic Versioning](https://semver.org).
+
+    ## [Unreleased]
+
+    ## [0.1.0] - 2026-01-01
+
+    ### Added
+
+    - Initial release
+    ```
+
+    Replace `0.1.0` with your current version and `2026-01-01` with today's date.
+
+2. **(Optional) Configure AI CLI** for changelog generation in `config/config.exs`:
+
+    ```elixir
+    config :rodar_release, :ai_cmd, {"claude", ["-p"]}   # default (Claude Code)
+    config :rodar_release, :ai_cmd, {"gemini", ["-p"]}   # Gemini CLI
+    config :rodar_release, :ai_cmd, {"codex", ["e"]}     # OpenAI Codex
+    config :rodar_release, :ai_cmd, {"gh", ["-p"]}       # GitHub Copilot
+    ```
+
+    If omitted, [Claude Code](https://claude.com/claude-code) is used by default.
+
+3. **(Recommended) Install the changelog skill** for AI-assisted dev tools:
+
+    ```bash
+    npx skills add rodar-project/rodar_skills --skill changelog
+    ```
+
 ## Semantic Versioning
 
 This tool follows [Semantic Versioning](https://semver.org) (`MAJOR.MINOR.PATCH`):

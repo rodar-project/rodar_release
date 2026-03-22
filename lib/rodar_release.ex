@@ -30,7 +30,7 @@ defmodule RodarRelease do
   The AI CLI defaults to Claude Code (`{"claude", ["-p"]}`) and can be
   configured via:
 
-      config :rodar_release, :ai_cmd, {"ollama", ["run", "llama3"]}
+      config :rodar_release, :ai_cmd, {"codex", ["e"]}
 
   ## Installation
 

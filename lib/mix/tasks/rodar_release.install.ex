@@ -19,7 +19,7 @@ if Code.ensure_loaded?(Igniter) do
     ## Options
 
       * `--ai-cmd` - configure the AI CLI for changelog generation.
-        Known presets: `claude`, `gemini`, `gh-copilot`, `codex`.
+        Known presets: `claude`, `gemini`, `gh`, `codex`.
         Unknown values are treated as a command with no extra args.
     """
 
@@ -88,7 +88,7 @@ if Code.ensure_loaded?(Igniter) do
 
     defp ai_preset("claude"), do: {"claude", ["-p"]}
     defp ai_preset("gemini"), do: {"gemini", ["-p"]}
-    defp ai_preset("gh-copilot"), do: {"gh", ["-p"]}
+    defp ai_preset("gh"), do: {"gh", ["-p"]}
     defp ai_preset("codex"), do: {"codex", ["e"]}
     defp ai_preset(other), do: {other, []}
 
