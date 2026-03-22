@@ -1,5 +1,21 @@
 # Changelog
 
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+### Added
+
+- Recommend [rodar-project/rodar_skills](https://github.com/rodar-project/rodar_skills) changelog skill in README for AI-assisted dev tools
+- Suggest installing the changelog skill via `npx skills` after Igniter setup
+
+### Changed
+
+- Gitignore Claude Code and agent skills artifacts (`.claude/`, `.agents/`, `skills-lock.json`)
+
 ## [1.2.0] - 2026-03-22
 
 ### Added
@@ -67,3 +83,14 @@
 - Changelog update support with ISO 8601 release dates
 - Git commit and annotated tag creation
 - `--dry-run` option to preview changes
+
+[Unreleased]: https://github.com/rodar-project/rodar_release/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/rodar-project/rodar_release/compare/v1.1.0...v1.2.0
+[1.1.0]: https://github.com/rodar-project/rodar_release/compare/v1.0.3...v1.1.0
+[1.0.3]: https://github.com/rodar-project/rodar_release/compare/v1.0.2...v1.0.3
+[1.0.2]: https://github.com/rodar-project/rodar_release/compare/v1.0.1...v1.0.2
+[1.0.1]: https://github.com/rodar-project/rodar_release/compare/v1.0.0...v1.0.1
+[1.0.0]: https://github.com/rodar-project/rodar_release/compare/v0.2.1...v1.0.0
+[0.2.1]: https://github.com/rodar-project/rodar_release/compare/v0.2.0...v0.2.1
+[0.2.0]: https://github.com/rodar-project/rodar_release/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/rodar-project/rodar_release/releases/tag/v0.1.0

@@ -12,6 +12,9 @@ if Code.ensure_loaded?(Igniter) do
       * Creates `CHANGELOG.md` with the standard Keep a Changelog structure
         if one does not already exist
       * Optionally configures `:ai_cmd` in `config/config.exs`
+      * Suggests installing the `changelog` skill from
+        [rodar-project/rodar_skills](https://github.com/rodar-project/rodar_skills)
+        for AI-assisted dev tools
 
     ## Options
 
@@ -36,6 +39,7 @@ if Code.ensure_loaded?(Igniter) do
       igniter
       |> ensure_changelog()
       |> maybe_configure_ai_cmd()
+      |> suggest_changelog_skill()
     end
 
     defp ensure_changelog(igniter) do
@@ -87,6 +91,16 @@ if Code.ensure_loaded?(Igniter) do
     defp ai_preset("gh-copilot"), do: {"gh", ["-p"]}
     defp ai_preset("codex"), do: {"codex", ["e"]}
     defp ai_preset(other), do: {other, []}
+
+    defp suggest_changelog_skill(igniter) do
+      Igniter.add_notice(igniter, """
+      📋 Recommended: install the changelog skill for AI-assisted dev tools:
+
+          npx skills add rodar-project/rodar_skills --skill changelog
+
+      See https://www.npmjs.com/package/skills for more options.
+      """)
+    end
 
     defp read_current_version do
       RodarRelease.read_version()

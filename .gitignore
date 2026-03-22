@@ -24,3 +24,12 @@ rodar_release-*.tar
 
 # Hex docs cache
 /.hex-docs/
+
+# Claude Code
+/.claude/
+
+# Agent skills
+/.agents/
+
+# Skills lock
+skills-lock.json

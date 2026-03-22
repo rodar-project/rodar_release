@@ -106,6 +106,18 @@ Amends the last release commit with any current changes and re-tags. Useful for 
 | `--dry-run` | all commands        | Preview changes without applying them |
 | `--hard`    | rollback            | Discard release changes entirely      |
 
+### Recommended: Agent Skills
+
+If you use an AI-assisted dev tool (Claude Code, Cursor, GitHub Copilot, etc.), install the [rodar-project/rodar_skills](https://github.com/rodar-project/rodar_skills) skill pack for a better changelog workflow:
+
+```bash
+npx skills add rodar-project/rodar_skills --skill changelog
+```
+
+The **changelog** skill follows the [Keep a Changelog](https://keepachangelog.com) spec and integrates naturally with `rodar_release` — use it to maintain your `[Unreleased]` section between releases.
+
+See the [`skills`](https://www.npmjs.com/package/skills) CLI docs or [skills.sh](https://skills.sh/) for more installation options.
+
 ### Programmatic API
 
 ```elixir
