@@ -39,14 +39,20 @@ defmodule RodarRelease.Helpers do
     content = File.read!(@changelog_file)
 
     updated =
-      String.replace(
-        content,
+      content
+      |> String.replace(
         "## [Unreleased]",
         "## [Unreleased]\n\n## [#{version}] - #{date}",
         global: false
       )
+      |> strip_empty_unreleased()
 
     File.write!(@changelog_file, updated)
+  end
+
+  defp strip_empty_unreleased(content) do
+    # Remove the [Unreleased] heading when it has no entries beneath it
+    String.replace(content, ~r/## \[Unreleased\]\n\n(?=## \[)/, "")
   end
 
   def maybe_generate_changelog_entry do
