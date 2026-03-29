@@ -46,6 +46,7 @@ defmodule RodarRelease.Helpers do
         global: false
       )
       |> strip_empty_unreleased()
+      |> update_comparison_links(version)
 
     File.write!(@changelog_file, updated)
   end
@@ -53,6 +54,39 @@ defmodule RodarRelease.Helpers do
   defp strip_empty_unreleased(content) do
     # Remove the [Unreleased] heading when it has no entries beneath it
     String.replace(content, ~r/## \[Unreleased\]\n\n(?=## \[)/, "")
+  end
+
+  defp update_comparison_links(content, version) do
+    # Update [Unreleased] link to compare from the new version tag
+    content =
+      Regex.replace(
+        ~r/\[Unreleased\]: (https:\/\/github\.com\/[^\/]+\/[^\/]+)\/compare\/v[^\s]+\.\.\.HEAD/,
+        content,
+        "[Unreleased]: \\1/compare/v#{version}...HEAD"
+      )
+
+    # Insert the new version comparison link after the [Unreleased] link
+    # It compares from the previous version tag to the new one
+    case Regex.run(
+           ~r/\[Unreleased\]: (https:\/\/github\.com\/[^\/]+\/[^\/]+)\/compare\/v#{Regex.escape(version)}\.\.\.HEAD\n(?:\[([^\]]+)\]: )?/,
+           content
+         ) do
+      [_, base_url, prev_version] ->
+        String.replace(
+          content,
+          "[Unreleased]: #{base_url}/compare/v#{version}...HEAD\n[#{prev_version}]:",
+          "[Unreleased]: #{base_url}/compare/v#{version}...HEAD\n[#{version}]: #{base_url}/compare/v#{prev_version}...v#{version}\n[#{prev_version}]:",
+          global: false
+        )
+
+      [_, _base_url] ->
+        # No previous version link exists, nothing to insert
+        content
+
+      nil ->
+        # No [Unreleased] link found, nothing to update
+        content
+    end
   end
 
   def maybe_generate_changelog_entry do
