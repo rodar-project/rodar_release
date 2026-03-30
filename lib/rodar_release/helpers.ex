@@ -169,6 +169,93 @@ defmodule RodarRelease.Helpers do
     Application.get_env(:rodar_release, :ai_cmd, {"claude", ["-p"]})
   end
 
+  @default_branch_pre %{
+    "main" => nil,
+    "master" => nil,
+    "develop" => "dev",
+    "dev" => "dev"
+  }
+
+  @default_branch_pre_patterns [
+    {~r/^release\//, "rc"},
+    {~r/^rc\//, "rc"},
+    {~r/^beta\//, "beta"},
+    {~r/^alpha\//, "alpha"}
+  ]
+
+  def current_branch do
+    {branch, 0} = System.cmd("git", ["rev-parse", "--abbrev-ref", "HEAD"])
+    String.trim(branch)
+  end
+
+  @doc """
+  Resolves the effective pre-release label based on the current branch and the
+  explicit `--pre` flag value.
+
+  Returns `{:ok, pre}` where `pre` is `nil` (stable) or a label string,
+  or `{:error, reason}` for invalid combinations.
+  """
+  def resolve_pre(branch, explicit_pre) do
+    branch_pre = branch_pre_config()
+    mapped = lookup_branch_pre(branch, branch_pre)
+
+    case {mapped, explicit_pre} do
+      # Main branch: stable only, reject --pre
+      {nil, nil} when branch in ["main", "master"] ->
+        {:ok, nil}
+
+      {nil, _pre} when branch in ["main", "master"] ->
+        {:error,
+         "Cannot use --pre on #{branch}. Release candidates should have their own branch."}
+
+      # Unmapped branch: block releases
+      {:unmapped, _} ->
+        {:error,
+         "Releases are not allowed from branch \"#{branch}\".\n" <>
+           "Use main for stable releases or a mapped branch (develop, release/*, etc.) for pre-releases.\n" <>
+           "Configure custom branch mappings via: config :rodar_release, :branch_pre, %{...}"}
+
+      # Mapped branch: use mapped suffix, allow --pre to override
+      {suffix, nil} when is_binary(suffix) ->
+        {:ok, suffix}
+
+      {_suffix, explicit} when is_binary(explicit) ->
+        {:ok, explicit}
+    end
+  end
+
+  defp lookup_branch_pre(branch, {exact, patterns}) do
+    case Map.fetch(exact, branch) do
+      {:ok, value} -> value
+      :error -> match_branch_pattern(branch, patterns)
+    end
+  end
+
+  defp match_branch_pattern(_branch, []), do: :unmapped
+
+  defp match_branch_pattern(branch, [{pattern, suffix} | rest]) do
+    if Regex.match?(pattern, branch) do
+      suffix
+    else
+      match_branch_pattern(branch, rest)
+    end
+  end
+
+  defp branch_pre_config do
+    custom = Application.get_env(:rodar_release, :branch_pre, %{})
+
+    {custom_exact, custom_patterns} =
+      Enum.split_with(custom, fn {k, _v} -> is_binary(k) end)
+
+    exact = Map.merge(@default_branch_pre, Map.new(custom_exact))
+
+    patterns =
+      Enum.map(custom_patterns, fn {regex, suffix} -> {regex, suffix} end) ++
+        @default_branch_pre_patterns
+
+    {exact, patterns}
+  end
+
   def mix!(args) do
     case System.cmd("mix", args, stderr_to_stdout: true) do
       {output, 0} ->

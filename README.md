@@ -80,16 +80,42 @@ This tool follows [Semantic Versioning](https://semver.org) (`MAJOR.MINOR.PATCH`
 
 ### Pre-release versions
 
-Pre-release identifiers (e.g. `1.2.0-rc.1`) are supported via the `--pre` flag. Use them to publish release candidates or development builds before a stable release:
+Pre-release identifiers (e.g. `1.2.0-rc.1`) are supported and automatically inferred from the current git branch:
 
-```bash
-mix rodar_release.minor --pre rc      # 1.1.0 -> 1.2.0-rc.1
-mix rodar_release.patch --pre rc      # 1.2.0-rc.1 -> 1.2.0-rc.2
-mix rodar_release.patch               # 1.2.0-rc.2 -> 1.2.0 (promote to stable)
-mix rodar_release.minor --pre dev     # 1.2.0 -> 1.3.0-dev.1
+| Branch | Suffix | Example |
+|---|---|---|
+| `main` / `master` | (none) | `1.2.0` |
+| `develop` / `dev` | `-dev.N` | `1.2.0-dev.1` |
+| `release/*` / `rc/*` | `-rc.N` | `1.2.0-rc.1` |
+| `beta/*` | `-beta.N` | `1.2.0-beta.1` |
+| `alpha/*` | `-alpha.N` | `1.2.0-alpha.1` |
+
+The full lifecycle looks like:
+
+```
+main:    1.1.0 (stable)
+              ↓ branch develop
+develop: 1.2.0-dev.1 → 1.2.0-dev.2 → 1.2.0-dev.3
+                                       ↓ branch release/1.2.0
+release: 1.2.0-rc.1  → 1.2.0-rc.2
+                         ↓ merge to main
+main:    1.2.0 (stable)
 ```
 
-Labels must be alphanumeric and start with a letter (e.g., `rc`, `beta`, `dev`, `alpha`).
+**Rules:**
+- `--pre` is **rejected on `main`/`master`** — release candidates should have their own branch
+- Releases from **unmapped branches** (feature branches, etc.) are blocked
+- `--pre` on a mapped branch **overrides** the auto-inferred suffix
+- Labels must be alphanumeric and start with a letter (e.g., `rc`, `beta`, `dev`, `alpha`)
+
+Custom branch mappings can be configured in `config.exs`:
+
+```elixir
+config :rodar_release, :branch_pre, %{
+  "staging" => "rc",
+  ~r/^preview\// => "beta"
+}
+```
 
 > Build metadata (e.g. `1.0.0+build.42`) is part of the semver spec but is not currently supported by this tool.
 
@@ -112,12 +138,13 @@ mix rodar_release.minor --pre rc     # pre-release:     1.1.0 -> 1.2.0-rc.1
 mix rodar_release.minor --dry-run    # preview changes
 ```
 
-1. Validates the git working directory is clean
-2. If `[Unreleased]` in `CHANGELOG.md` is empty, offers to generate an entry using [Claude Code](https://claude.com/claude-code) (requires `claude` CLI)
-3. Bumps the version in `mix.exs`
-4. Updates `CHANGELOG.md` with the release date and comparison links
-5. Commits changes with message `release: vX.Y.Z`
-6. Creates an annotated git tag `vX.Y.Z`
+1. Resolves the pre-release suffix from the current branch (or `--pre` flag)
+2. Validates the git working directory is clean
+3. If `[Unreleased]` in `CHANGELOG.md` is empty, offers to generate an entry using [Claude Code](https://claude.com/claude-code) (requires `claude` CLI)
+4. Bumps the version in `mix.exs`
+5. Updates `CHANGELOG.md` with the release date and comparison links
+6. Commits changes with message `release: vX.Y.Z`
+7. Creates an annotated git tag `vX.Y.Z`
 
 #### AI-generated changelog
 

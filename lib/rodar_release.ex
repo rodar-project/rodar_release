@@ -14,17 +14,18 @@ defmodule RodarRelease do
     * `:minor` — new functionality, backward-compatible
     * `:major` — breaking changes
 
-  Pre-release suffixes (`-rc.1`, `-beta.1`, `-dev.1`) are supported via the
-  `--pre` flag. See `bump/3` for details on version transitions.
+  Pre-release suffixes (`-rc.1`, `-beta.1`, `-dev.1`) are automatically inferred
+  from the current git branch. `develop` → `-dev`, `release/*` → `-rc`, etc.
+  See `RodarRelease.Helpers.resolve_pre/2` for the full mapping.
 
   ## Releasing
 
-      mix rodar_release.patch              # bug fix
-      mix rodar_release.minor              # new feature
-      mix rodar_release.major              # breaking change
-      mix rodar_release.minor --pre rc     # pre-release: 1.1.0 -> 1.2.0-rc.1
-      mix rodar_release.patch --pre rc     # increment:   1.2.0-rc.1 -> 1.2.0-rc.2
-      mix rodar_release.patch              # promote:     1.2.0-rc.2 -> 1.2.0
+      mix rodar_release.patch              # bug fix (on main)
+      mix rodar_release.minor              # new feature (on main)
+      mix rodar_release.major              # breaking change (on main)
+      mix rodar_release.minor              # on develop: 1.1.0 -> 1.2.0-dev.1
+      mix rodar_release.patch              # on develop: 1.2.0-dev.1 -> 1.2.0-dev.2
+      mix rodar_release.patch              # on release/*: 1.2.0-dev.3 -> 1.2.0-rc.1
       mix rodar_release.patch --dry-run    # preview
 
   If `CHANGELOG.md` has no entries under `[Unreleased]`, the release task will
@@ -47,6 +48,13 @@ defmodule RodarRelease do
   configure `:ai_cmd` in `config/config.exs`:
 
       config :rodar_release, :ai_cmd, {"gemini", ["-p"]}
+
+  Custom branch-to-suffix mappings can also be configured:
+
+      config :rodar_release, :branch_pre, %{
+        "staging" => "rc",
+        ~r/^preview\\// => "beta"
+      }
 
   See the [README](https://github.com/rodar-project/rodar_release#without-igniter)
   for full manual setup instructions.

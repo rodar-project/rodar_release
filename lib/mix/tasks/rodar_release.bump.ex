@@ -8,8 +8,20 @@ defmodule Mix.Tasks.RodarRelease.Bump do
       OptionParser.parse(args, strict: [dry_run: :boolean, pre: :string])
 
     dry_run = Keyword.get(opts, :dry_run, false)
-    pre = Keyword.get(opts, :pre)
+    explicit_pre = Keyword.get(opts, :pre)
 
+    branch = current_branch()
+
+    case resolve_pre(branch, explicit_pre) do
+      {:ok, pre} ->
+        do_run(bump, pre, branch, dry_run)
+
+      {:error, reason} ->
+        Mix.raise(reason)
+    end
+  end
+
+  defp do_run(bump, pre, branch, dry_run) do
     current_version = RodarRelease.read_version()
 
     unless dry_run do
@@ -20,6 +32,7 @@ defmodule Mix.Tasks.RodarRelease.Bump do
     today = Date.utc_today() |> Date.to_iso8601()
 
     Mix.shell().info("Release plan:")
+    Mix.shell().info("  Branch:           #{branch}")
     Mix.shell().info("  Current version:  #{current_version}")
     Mix.shell().info("  Release version:  #{release_version}")
 
