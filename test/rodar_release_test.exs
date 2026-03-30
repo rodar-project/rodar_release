@@ -113,6 +113,58 @@ defmodule RodarReleaseTest do
     end
   end
 
+  describe "has_pre?/1" do
+    test "returns true for pre-release version" do
+      assert RodarRelease.has_pre?("1.0.0-rc.1")
+      assert RodarRelease.has_pre?("2.3.0-dev.5")
+    end
+
+    test "returns false for stable version" do
+      refute RodarRelease.has_pre?("1.0.0")
+      refute RodarRelease.has_pre?("0.1.0")
+    end
+  end
+
+  describe "promote/1" do
+    test "strips pre-release suffix" do
+      assert RodarRelease.promote("1.5.1-dev.3") == "1.5.1"
+    end
+
+    test "works with rc suffix" do
+      assert RodarRelease.promote("2.0.0-rc.5") == "2.0.0"
+    end
+
+    test "raises on stable version" do
+      assert_raise ArgumentError, ~r/expects a pre-release version/, fn ->
+        RodarRelease.promote("1.0.0")
+      end
+    end
+  end
+
+  describe "promote/2" do
+    test "patch bumps the base version" do
+      assert RodarRelease.promote("1.5.1-dev.3", :patch) == "1.5.2"
+    end
+
+    test "minor bumps the base version" do
+      assert RodarRelease.promote("1.5.1-dev.3", :minor) == "1.6.0"
+    end
+
+    test "major bumps the base version" do
+      assert RodarRelease.promote("1.5.1-dev.3", :major) == "2.0.0"
+    end
+
+    test "works with zero-based versions" do
+      assert RodarRelease.promote("0.1.0-dev.1", :minor) == "0.2.0"
+    end
+
+    test "raises on stable version" do
+      assert_raise ArgumentError, ~r/expects a pre-release version/, fn ->
+        RodarRelease.promote("1.0.0", :patch)
+      end
+    end
+  end
+
   describe "read_version/1 with pre-release" do
     test "reads pre-release version" do
       File.write!("test_mix.exs", ~s|version: "1.2.0-rc.1",\n|)

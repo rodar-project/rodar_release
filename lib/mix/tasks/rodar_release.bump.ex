@@ -24,6 +24,14 @@ defmodule Mix.Tasks.RodarRelease.Bump do
   defp do_run(bump, pre, branch, dry_run) do
     current_version = RodarRelease.read_version()
 
+    if pre == nil and RodarRelease.has_pre?(current_version) do
+      Mix.raise(
+        "Current version #{current_version} has a pre-release suffix on #{branch}.\n" <>
+          "This typically happens after merging a development branch.\n\n" <>
+          "Use `mix rodar_release.merge` to promote the pre-release version."
+      )
+    end
+
     unless dry_run do
       validate_clean_working_tree!()
     end
@@ -48,34 +56,8 @@ defmodule Mix.Tasks.RodarRelease.Bump do
       Mix.shell().info("[dry-run] Would commit: release: v#{release_version}")
       Mix.shell().info("[dry-run] Would tag: v#{release_version}")
     else
+      validate_tag_available!(release_version)
       execute_release(release_version, today)
     end
-  end
-
-  defp execute_release(release_version, today) do
-    maybe_generate_changelog_entry()
-
-    step("Updating mix.exs version to #{release_version}", fn ->
-      RodarRelease.write_version(release_version)
-    end)
-
-    step("Updating CHANGELOG.md with release date", fn ->
-      update_changelog(release_version, today)
-    end)
-
-    step("Committing release v#{release_version}", fn ->
-      git!(["add", mix_file(), changelog_file()])
-      git!(["commit", "-m", "release: v#{release_version}"])
-    end)
-
-    step("Tagging v#{release_version}", fn ->
-      git!(["tag", "-a", "v#{release_version}", "-m", "Release v#{release_version}"])
-    end)
-
-    Mix.shell().info("")
-    Mix.shell().info("Release v#{release_version} complete!")
-    Mix.shell().info("")
-    Mix.shell().info("Next steps:")
-    Mix.shell().info("  git push origin main --tags")
   end
 end

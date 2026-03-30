@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- `mix rodar_release.merge` task to promote pre-release versions after merging into a stable branch
+- `RodarRelease.promote/2` to strip or bump a pre-release version to stable
+- `RodarRelease.has_pre?/1` to check if a version has a pre-release suffix
+- Tag existence check before releasing to prevent version collisions
+- Auto-detection of leftover pre-release suffix on stable branches, guiding users to `merge`
+
+### Fixed
+
+- Documentation warning referencing hidden `RodarRelease.Helpers.resolve_pre/2`
+
 ## [1.5.0] - 2026-03-30
 
 ### Added

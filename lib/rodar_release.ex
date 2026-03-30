@@ -15,8 +15,13 @@ defmodule RodarRelease do
     * `:major` — breaking changes
 
   Pre-release suffixes (`-rc.1`, `-beta.1`, `-dev.1`) are automatically inferred
-  from the current git branch. `develop` → `-dev`, `release/*` → `-rc`, etc.
-  See `RodarRelease.Helpers.resolve_pre/2` for the full mapping.
+  from the current git branch:
+
+    * `main` / `master` — stable (no suffix)
+    * `develop` — `-dev`
+    * `release/*` — `-rc`
+    * `hotfix/*` — `-rc`
+    * custom mappings via `config :rodar_release, :branch_pre, %{...}`
 
   ## Releasing
 
@@ -27,6 +32,19 @@ defmodule RodarRelease do
       mix rodar_release.patch              # on develop: 1.2.0-dev.1 -> 1.2.0-dev.2
       mix rodar_release.patch              # on release/*: 1.2.0-dev.3 -> 1.2.0-rc.1
       mix rodar_release.patch --dry-run    # preview
+
+  ## Post-merge promotion
+
+  After merging a development branch into `main`, the version will have a
+  pre-release suffix (e.g. `1.5.1-dev.3`). Use `mix rodar_release.merge` to
+  promote it to a stable release:
+
+      mix rodar_release.merge              # 1.5.1-dev.3 -> 1.5.1
+      mix rodar_release.merge minor        # 1.5.1-dev.3 -> 1.6.0
+      mix rodar_release.merge major        # 1.5.1-dev.3 -> 2.0.0
+
+  The regular `patch/minor/major` tasks will detect a leftover pre-release
+  suffix on a stable branch and point you to `merge` instead.
 
   If `CHANGELOG.md` has no entries under `[Unreleased]`, the release task will
   offer to generate one using an AI CLI based on the git history since the
@@ -199,6 +217,47 @@ defmodule RodarRelease do
     end
   end
 
+  @doc """
+  Promotes a pre-release version to stable.
+
+  Without a segment, strips the suffix and returns the base version.
+  With a segment, bumps the base version by that segment — useful when
+  the merge represents a higher-level change than the original pre-release.
+
+  ## Examples
+
+      iex> RodarRelease.promote("1.5.1-dev.3")
+      "1.5.1"
+
+      iex> RodarRelease.promote("1.5.1-dev.3", :minor)
+      "1.6.0"
+
+      iex> RodarRelease.promote("1.5.1-dev.3", :major)
+      "2.0.0"
+
+  """
+  def promote(version, segment \\ nil)
+
+  def promote(version, nil) do
+    unless has_pre?(version) do
+      raise ArgumentError,
+            "promote/2 expects a pre-release version, got #{inspect(version)}"
+    end
+
+    {base, _label, _counter} = parse_version(version)
+    base
+  end
+
+  def promote(version, segment) when segment in [:patch, :minor, :major] do
+    unless has_pre?(version) do
+      raise ArgumentError,
+            "promote/2 expects a pre-release version, got #{inspect(version)}"
+    end
+
+    {base, _label, _counter} = parse_version(version)
+    bump(base, segment)
+  end
+
   defp parse_version(version) do
     case String.split(version, "-", parts: 2) do
       [base] ->
@@ -212,7 +271,19 @@ defmodule RodarRelease do
     end
   end
 
-  defp has_pre?(version), do: String.contains?(version, "-")
+  @doc """
+  Returns whether a version string contains a pre-release suffix.
+
+  ## Examples
+
+      iex> RodarRelease.has_pre?("1.0.0-rc.1")
+      true
+
+      iex> RodarRelease.has_pre?("1.0.0")
+      false
+
+  """
+  def has_pre?(version), do: String.contains?(version, "-")
 
   defp validate_pre!(pre) do
     unless Regex.match?(~r/^[a-zA-Z][a-zA-Z0-9]*$/, pre) do

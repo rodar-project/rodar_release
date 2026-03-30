@@ -24,6 +24,17 @@ defmodule RodarRelease.Helpers do
     end
   end
 
+  def validate_tag_available!(version) do
+    {output, 0} = System.cmd("git", ["tag", "-l", "v#{version}"])
+
+    unless String.trim(output) == "" do
+      Mix.raise(
+        "Tag v#{version} already exists. " <>
+          "This version has already been released."
+      )
+    end
+  end
+
   def validate_clean_working_tree! do
     {output, 0} = System.cmd("git", ["status", "--porcelain"])
 
@@ -279,5 +290,32 @@ defmodule RodarRelease.Helpers do
   def step(description, fun) do
     Mix.shell().info("=> #{description}")
     fun.()
+  end
+
+  def execute_release(release_version, today) do
+    maybe_generate_changelog_entry()
+
+    step("Updating mix.exs version to #{release_version}", fn ->
+      RodarRelease.write_version(release_version)
+    end)
+
+    step("Updating CHANGELOG.md with release date", fn ->
+      update_changelog(release_version, today)
+    end)
+
+    step("Committing release v#{release_version}", fn ->
+      git!(["add", mix_file(), changelog_file()])
+      git!(["commit", "-m", "release: v#{release_version}"])
+    end)
+
+    step("Tagging v#{release_version}", fn ->
+      git!(["tag", "-a", "v#{release_version}", "-m", "Release v#{release_version}"])
+    end)
+
+    Mix.shell().info("")
+    Mix.shell().info("Release v#{release_version} complete!")
+    Mix.shell().info("")
+    Mix.shell().info("Next steps:")
+    Mix.shell().info("  git push origin #{current_branch()} --tags")
   end
 end

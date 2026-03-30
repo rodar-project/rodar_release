@@ -160,6 +160,19 @@ config :rodar_release, :ai_cmd, {"codex", ["e"]}     # OpenAI Codex
 
 The prompt is appended as the last argument.
 
+#### Merge (post-merge promotion)
+
+```bash
+mix rodar_release.merge              # 1.5.1-dev.3 -> 1.5.1
+mix rodar_release.merge minor        # 1.5.1-dev.3 -> 1.6.0
+mix rodar_release.merge major        # 1.5.1-dev.3 -> 2.0.0
+mix rodar_release.merge --dry-run    # preview changes
+```
+
+Promotes a pre-release version to stable after merging a development branch into `main`/`master`. Without arguments, strips the pre-release suffix. Pass a segment to bump higher.
+
+If you run `mix rodar_release.patch` (or `minor`/`major`) on a stable branch and the current version has a pre-release suffix, the task will detect this and suggest using `merge` instead.
+
 #### Rollback
 
 ```bash
@@ -207,6 +220,12 @@ RodarRelease.bump("1.2.0-rc.1", :patch, "rc")
 
 RodarRelease.bump("1.2.0-rc.2", :patch)
 #=> "1.2.0"
+
+RodarRelease.promote("1.5.1-dev.3", :minor)
+#=> "1.6.0"
+
+RodarRelease.has_pre?("1.2.0-rc.1")
+#=> true
 
 RodarRelease.write_version("1.3.0")
 ```

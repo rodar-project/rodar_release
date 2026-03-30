@@ -9,6 +9,7 @@ defmodule Mix.Tasks.RodarRelease do
       mix rodar_release.patch      - bump the patch version and release
       mix rodar_release.minor      - bump the minor version and release
       mix rodar_release.major      - bump the major version and release
+      mix rodar_release.merge      - promote a pre-release version after merging
       mix rodar_release.rollback   - undo the last release
       mix rodar_release.amend      - fold changes into the last release commit
       mix rodar_release.install    - set up rodar_release (via Igniter)
