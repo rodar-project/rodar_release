@@ -78,7 +78,20 @@ This tool follows [Semantic Versioning](https://semver.org) (`MAJOR.MINOR.PATCH`
 - **Minor** (`mix rodar_release.minor`) — new functionality that is backward-compatible. Use when you add a feature, deprecate something, or make non-breaking changes.
 - **Major** (`mix rodar_release.major`) — breaking changes. Use when you remove or change existing behavior in a way that requires consumers to update their code.
 
-> Pre-release identifiers (e.g. `1.0.0-rc.1`) and build metadata (e.g. `1.0.0+build.42`) are part of the semver spec but are not currently supported by this tool.
+### Pre-release versions
+
+Pre-release identifiers (e.g. `1.2.0-rc.1`) are supported via the `--pre` flag. Use them to publish release candidates or development builds before a stable release:
+
+```bash
+mix rodar_release.minor --pre rc      # 1.1.0 -> 1.2.0-rc.1
+mix rodar_release.patch --pre rc      # 1.2.0-rc.1 -> 1.2.0-rc.2
+mix rodar_release.patch               # 1.2.0-rc.2 -> 1.2.0 (promote to stable)
+mix rodar_release.minor --pre dev     # 1.2.0 -> 1.3.0-dev.1
+```
+
+Labels must be alphanumeric and start with a letter (e.g., `rc`, `beta`, `dev`, `alpha`).
+
+> Build metadata (e.g. `1.0.0+build.42`) is part of the semver spec but is not currently supported by this tool.
 
 ## Usage
 
@@ -92,9 +105,10 @@ mix help rodar_release.patch   # help for a specific command
 #### Release
 
 ```bash
-mix rodar_release.patch              # bug fix:        1.0.8 -> 1.0.9
-mix rodar_release.minor              # new feature:    1.0.8 -> 1.1.0
+mix rodar_release.patch              # bug fix:         1.0.8 -> 1.0.9
+mix rodar_release.minor              # new feature:     1.0.8 -> 1.1.0
 mix rodar_release.major              # breaking change: 1.0.8 -> 2.0.0
+mix rodar_release.minor --pre rc     # pre-release:     1.1.0 -> 1.2.0-rc.1
 mix rodar_release.minor --dry-run    # preview changes
 ```
 
@@ -143,19 +157,29 @@ Amends the last release commit with any current changes and re-tags. Useful for 
 
 ### Options
 
-| Option      | Applies to          | Description                           |
-|-------------|---------------------|---------------------------------------|
-| `--dry-run` | all commands        | Preview changes without applying them |
-| `--hard`    | rollback            | Discard release changes entirely      |
+| Option         | Applies to          | Description                                                  |
+|----------------|---------------------|--------------------------------------------------------------|
+| `--dry-run`    | all commands        | Preview changes without applying them                        |
+| `--pre LABEL`  | patch, minor, major | Create a pre-release version (e.g., `--pre rc`, `--pre beta`) |
+| `--hard`       | rollback            | Discard release changes entirely                             |
 
 ### Programmatic API
 
 ```elixir
 RodarRelease.read_version()
-#=> "0.1.0"
+#=> "1.2.0"
 
 RodarRelease.bump("1.2.3", :minor)
 #=> "1.3.0"
+
+RodarRelease.bump("1.1.0", :minor, "rc")
+#=> "1.2.0-rc.1"
+
+RodarRelease.bump("1.2.0-rc.1", :patch, "rc")
+#=> "1.2.0-rc.2"
+
+RodarRelease.bump("1.2.0-rc.2", :patch)
+#=> "1.2.0"
 
 RodarRelease.write_version("1.3.0")
 ```

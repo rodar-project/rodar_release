@@ -92,6 +92,37 @@ defmodule RodarReleaseChangelogTest do
                "[1.1.0]: https://github.com/rodar-project/rodar_release/compare/v1.0.0...v1.1.0"
     end
 
+    test "handles pre-release versions in comparison links" do
+      File.write!(@changelog_file, """
+      # Changelog
+
+      ## [Unreleased]
+
+      ### Added
+
+      - RC feature
+
+      ## [1.1.0] - 2026-03-29
+
+      ### Added
+
+      - Feature
+
+      [Unreleased]: https://github.com/rodar-project/rodar_release/compare/v1.1.0...HEAD
+      [1.1.0]: https://github.com/rodar-project/rodar_release/releases/tag/v1.1.0
+      """)
+
+      update_changelog("1.2.0-rc.1", "2026-03-30")
+
+      result = File.read!(@changelog_file)
+
+      assert result =~
+               "[Unreleased]: https://github.com/rodar-project/rodar_release/compare/v1.2.0-rc.1...HEAD"
+
+      assert result =~
+               "[1.2.0-rc.1]: https://github.com/rodar-project/rodar_release/compare/v1.1.0...v1.2.0-rc.1"
+    end
+
     test "preserves changelog without comparison links" do
       File.write!(@changelog_file, """
       # Changelog

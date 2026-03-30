@@ -3,7 +3,7 @@ defmodule RodarRelease.Helpers do
 
   @mix_file "mix.exs"
   @changelog_file "CHANGELOG.md"
-  @release_commit_pattern ~r/^release: v(\d+\.\d+\.\d+)$/
+  @release_commit_pattern ~r/^release: v(\d+\.\d+\.\d+(?:-[a-zA-Z0-9]+\.\d+)?)$/
 
   def mix_file, do: @mix_file
   def changelog_file, do: @changelog_file

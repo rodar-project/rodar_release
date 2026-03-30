@@ -5,9 +5,10 @@ defmodule Mix.Tasks.RodarRelease.Bump do
 
   def run(bump, args) do
     {opts, _, _} =
-      OptionParser.parse(args, strict: [dry_run: :boolean])
+      OptionParser.parse(args, strict: [dry_run: :boolean, pre: :string])
 
     dry_run = Keyword.get(opts, :dry_run, false)
+    pre = Keyword.get(opts, :pre)
 
     current_version = RodarRelease.read_version()
 
@@ -15,13 +16,17 @@ defmodule Mix.Tasks.RodarRelease.Bump do
       validate_clean_working_tree!()
     end
 
-    release_version = RodarRelease.bump(current_version, bump)
+    release_version = RodarRelease.bump(current_version, bump, pre)
     today = Date.utc_today() |> Date.to_iso8601()
 
     Mix.shell().info("Release plan:")
     Mix.shell().info("  Current version:  #{current_version}")
     Mix.shell().info("  Release version:  #{release_version}")
-    Mix.shell().info("  Bump type:        #{bump}")
+
+    Mix.shell().info(
+      "  Bump type:        #{bump}#{if pre, do: " (pre-release: #{pre})", else: ""}"
+    )
+
     Mix.shell().info("")
 
     if dry_run do
