@@ -113,6 +113,34 @@ defmodule Mix.Tasks.RodarRelease.MergeTest do
     end
   end
 
+  describe "merge --no-tag" do
+    test "skips tagging when --no-tag is passed" do
+      in_dir(fn ->
+        Mix.Tasks.RodarRelease.Merge.run(["--no-tag"])
+
+        assert File.read!("mix.exs") =~ ~s|version: "1.5.1"|
+
+        {tags, 0} = System.cmd("git", ["tag"])
+        refute tags =~ "v1.5.1"
+
+        {log, 0} = System.cmd("git", ["log", "-1", "--format=%s"])
+        assert String.trim(log) == "release: v1.5.1"
+      end)
+    end
+
+    test "skips tag validation when --no-tag is passed" do
+      in_dir(fn ->
+        # Create the tag that would conflict
+        git!(["tag", "-a", "v1.5.1", "-m", "existing"])
+
+        # Should not raise, because we're skipping tagging
+        Mix.Tasks.RodarRelease.Merge.run(["--no-tag"])
+
+        assert File.read!("mix.exs") =~ ~s|version: "1.5.1"|
+      end)
+    end
+  end
+
   describe "merge validation" do
     test "raises when not on stable branch" do
       in_dir(fn ->

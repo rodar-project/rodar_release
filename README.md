@@ -144,7 +144,7 @@ mix rodar_release.minor --dry-run    # preview changes
 4. Bumps the version in `mix.exs`
 5. Updates `CHANGELOG.md` with the release date and comparison links
 6. Commits changes with message `release: vX.Y.Z`
-7. Creates an annotated git tag `vX.Y.Z`
+7. Creates an annotated git tag `vX.Y.Z` (stable releases only — pre-releases skip tagging by default)
 
 #### AI-generated changelog
 
@@ -167,11 +167,18 @@ mix rodar_release.merge              # 1.5.1-dev.3 -> 1.5.1
 mix rodar_release.merge minor        # 1.5.1-dev.3 -> 1.6.0
 mix rodar_release.merge major        # 1.5.1-dev.3 -> 2.0.0
 mix rodar_release.merge --dry-run    # preview changes
+mix rodar_release.merge --no-tag     # promote without tagging
 ```
 
 Promotes a pre-release version to stable after merging a development branch into `main`/`master`. Without arguments, strips the pre-release suffix. Pass a segment to bump higher.
 
 If you run `mix rodar_release.patch` (or `minor`/`major`) on a stable branch and the current version has a pre-release suffix, the task will detect this and suggest using `merge` instead.
+
+#### Tagging behavior
+
+By default, **stable releases** create an annotated git tag (`vX.Y.Z`) and suggest pushing only that specific tag. **Pre-release versions** skip tagging entirely to avoid polluting the tags list with `-dev.N`, `-rc.N`, etc.
+
+Use `--no-tag` to skip tagging on any release, including stable ones.
 
 #### Rollback
 
@@ -197,11 +204,12 @@ Amends the last release commit with any current changes and re-tags. Useful for 
 
 ### Options
 
-| Option         | Applies to          | Description                                                  |
-|----------------|---------------------|--------------------------------------------------------------|
-| `--dry-run`    | all commands        | Preview changes without applying them                        |
-| `--pre LABEL`  | patch, minor, major | Create a pre-release version (e.g., `--pre rc`, `--pre beta`) |
-| `--hard`       | rollback            | Discard release changes entirely                             |
+| Option         | Applies to                    | Description                                                  |
+|----------------|-------------------------------|--------------------------------------------------------------|
+| `--dry-run`    | all commands                  | Preview changes without applying them                        |
+| `--pre LABEL`  | patch, minor, major           | Create a pre-release version (e.g., `--pre rc`, `--pre beta`) |
+| `--no-tag`     | patch, minor, major, merge    | Skip creating a git tag for the release                      |
+| `--hard`       | rollback                      | Discard release changes entirely                             |
 
 ### Programmatic API
 

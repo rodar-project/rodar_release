@@ -16,6 +16,7 @@ defmodule Mix.Tasks.RodarRelease.Merge do
   ## Options
 
     * `--dry-run` - Preview the release without making changes
+    * `--no-tag` - Skip creating a git tag for the release
 
   """
   use Mix.Task
@@ -25,9 +26,10 @@ defmodule Mix.Tasks.RodarRelease.Merge do
   @impl Mix.Task
   def run(args) do
     {opts, positional, _} =
-      OptionParser.parse(args, strict: [dry_run: :boolean])
+      OptionParser.parse(args, strict: [dry_run: :boolean, no_tag: :boolean])
 
     dry_run = Keyword.get(opts, :dry_run, false)
+    no_tag = Keyword.get(opts, :no_tag, false)
     segment = parse_segment!(positional)
     branch = current_branch()
 
@@ -58,10 +60,18 @@ defmodule Mix.Tasks.RodarRelease.Merge do
       Mix.shell().info("[dry-run] Would update mix.exs version to #{release_version}")
       Mix.shell().info("[dry-run] Would update CHANGELOG.md with release date #{today}")
       Mix.shell().info("[dry-run] Would commit: release: v#{release_version}")
-      Mix.shell().info("[dry-run] Would tag: v#{release_version}")
+
+      if no_tag do
+        Mix.shell().info("[dry-run] Would skip tagging (--no-tag)")
+      else
+        Mix.shell().info("[dry-run] Would tag: v#{release_version}")
+      end
     else
-      validate_tag_available!(release_version)
-      execute_release(release_version, today)
+      unless no_tag do
+        validate_tag_available!(release_version)
+      end
+
+      execute_release(release_version, today, no_tag: no_tag)
     end
   end
 

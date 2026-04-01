@@ -14,10 +14,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `RodarRelease.has_pre?/1` to check if a version has a pre-release suffix
 - Tag existence check before releasing to prevent version collisions
 - Auto-detection of leftover pre-release suffix on stable branches, guiding users to `merge`
+- `--no-tag` flag for all release commands to skip git tag creation
+- Pre-release versions now skip tagging by default to avoid polluting the tags list
+
+### Changed
+
+- "Next steps" push suggestion now uses specific tag name (`git push origin <branch> v1.2.0`) instead of `--tags`, preventing accidental push of unrelated local tags
+- Pre-release releases no longer include a tag reference in the push suggestion
 
 ### Fixed
 
-- Documentation warning referencing hidden `RodarRelease.Helpers.resolve_pre/2`
+- Documentation warning referencing hidden `resolve_pre/2` helper
 
 ## [1.5.0] - 2026-03-30
 

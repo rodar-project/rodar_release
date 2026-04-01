@@ -292,7 +292,11 @@ defmodule RodarRelease.Helpers do
     fun.()
   end
 
-  def execute_release(release_version, today) do
+  def execute_release(release_version, today, opts \\ []) do
+    no_tag = Keyword.get(opts, :no_tag, false)
+    is_prerelease = RodarRelease.has_pre?(release_version)
+    skip_tag = no_tag or is_prerelease
+
     maybe_generate_changelog_entry()
 
     step("Updating mix.exs version to #{release_version}", fn ->
@@ -308,14 +312,23 @@ defmodule RodarRelease.Helpers do
       git!(["commit", "-m", "release: v#{release_version}"])
     end)
 
-    step("Tagging v#{release_version}", fn ->
-      git!(["tag", "-a", "v#{release_version}", "-m", "Release v#{release_version}"])
-    end)
+    unless skip_tag do
+      step("Tagging v#{release_version}", fn ->
+        git!(["tag", "-a", "v#{release_version}", "-m", "Release v#{release_version}"])
+      end)
+    end
+
+    branch = current_branch()
 
     Mix.shell().info("")
     Mix.shell().info("Release v#{release_version} complete!")
     Mix.shell().info("")
     Mix.shell().info("Next steps:")
-    Mix.shell().info("  git push origin #{current_branch()} --tags")
+
+    if skip_tag do
+      Mix.shell().info("  git push origin #{branch}")
+    else
+      Mix.shell().info("  git push origin #{branch} v#{release_version}")
+    end
   end
 end

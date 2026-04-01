@@ -14,6 +14,7 @@ defmodule Mix.Tasks.RodarRelease.Major do
 
     * `--dry-run` - show what would happen without making any changes
     * `--pre LABEL` - create a pre-release version with the given label (e.g., rc, beta, dev)
+    * `--no-tag` - skip creating a git tag for the release
   """
 
   use Mix.Task

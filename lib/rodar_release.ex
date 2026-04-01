@@ -4,7 +4,9 @@ defmodule RodarRelease do
 
   The version lives directly in `mix.exs` as the single source of truth.
   At release time, `mix rodar_release.patch|minor|major` bumps it, updates
-  CHANGELOG.md (including comparison links), commits, and tags.
+  CHANGELOG.md (including comparison links), and commits. Stable releases
+  are also tagged; pre-release versions skip tagging by default to avoid
+  polluting the tags list. Use `--no-tag` to skip tagging on any release.
 
   ## Semantic Versioning
 
