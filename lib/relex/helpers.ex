@@ -177,7 +177,7 @@ defmodule Relex.Helpers do
   end
 
   defp ai_cmd do
-    Application.get_env(:relex, :ai_cmd, {"claude", ["-p"]})
+    Relex.Config.get(:ai_cmd)
   end
 
   @default_branch_pre %{
@@ -224,7 +224,7 @@ defmodule Relex.Helpers do
         {:error,
          "Releases are not allowed from branch \"#{branch}\".\n" <>
            "Use main for stable releases or a mapped branch (develop, release/*, etc.) for pre-releases.\n" <>
-           "Configure custom branch mappings via: config :relex, :branch_pre, %{...}"}
+           "Configure custom branch mappings in .relex.exs: [branch_pre: %{...}]"}
 
       # Mapped branch: use mapped suffix, allow --pre to override
       {suffix, nil} when is_binary(suffix) ->
@@ -253,7 +253,7 @@ defmodule Relex.Helpers do
   end
 
   defp branch_pre_config do
-    custom = Application.get_env(:relex, :branch_pre, %{})
+    custom = Relex.Config.get(:branch_pre)
 
     {custom_exact, custom_patterns} =
       Enum.split_with(custom, fn {k, _v} -> is_binary(k) end)

@@ -23,7 +23,7 @@ defmodule Relex do
     * `develop` — `-dev`
     * `release/*` — `-rc`
     * `hotfix/*` — `-rc`
-    * custom mappings via `config :relex, :branch_pre, %{...}`
+    * custom mappings via `.relex.exs`
 
   ## Releasing
 
@@ -53,31 +53,35 @@ defmodule Relex do
   last tag. You are prompted to confirm before anything is written.
 
   The AI CLI defaults to Claude Code (`{"claude", ["-p"]}`) and can be
-  configured via:
+  configured in `.relex.exs`:
 
-      config :relex, :ai_cmd, {"codex", ["e"]}
+      [ai_cmd: {"codex", ["e"]}]
 
   ## Installation
 
-  If your project uses [Igniter](https://hex.pm/packages/igniter):
+      mix archive.install hex relex
 
-      mix igniter.install relex
+  Then in your project:
 
-  Otherwise, create a `CHANGELOG.md` with the
-  [Keep a Changelog](https://keepachangelog.com) structure and optionally
-  configure `:ai_cmd` in `config/config.exs`:
+      mix relex.init
 
-      config :relex, :ai_cmd, {"gemini", ["-p"]}
+  This creates a `CHANGELOG.md` and `.relex.exs` config template.
 
-  Custom branch-to-suffix mappings can also be configured:
+  ## Configuration
 
-      config :relex, :branch_pre, %{
-        "staging" => "rc",
-        ~r/^preview\\// => "beta"
-      }
+  Relex reads configuration from `.relex.exs` in your project root
+  (like `.formatter.exs`):
 
-  See the [README](https://github.com/relex-project/relex#without-igniter)
-  for full manual setup instructions.
+      [
+        ai_cmd: {"gemini", ["-p"]},
+        branch_pre: %{
+          "staging" => "rc",
+          ~r/^preview\\// => "beta"
+        }
+      ]
+
+  Both keys are optional. See the
+  [README](https://github.com/relex-project/relex) for details.
 
   ## Rollback & Amend
 

@@ -12,7 +12,7 @@ defmodule Mix.Tasks.Relex do
       mix relex.merge      - promote a pre-release version after merging
       mix relex.rollback   - undo the last release
       mix relex.amend      - fold changes into the last release commit
-      mix relex.install    - set up relex (via Igniter)
+      mix relex.init       - set up relex in your project
 
   Run `mix help relex.<command>` for details on each command.
   """

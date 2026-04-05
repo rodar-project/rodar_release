@@ -9,10 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **BREAKING:** Relex is now distributed as a mix archive instead of a hex dependency — install with `mix archive.install hex relex`
+- **BREAKING:** Configuration moved from `config :relex` in `config.exs` to `.relex.exs` dotfile in project root
+- `mix relex.install` (Igniter) replaced by `mix relex.init` (no dependencies required)
 - Renamed project from `rodar_release` to `relex` — **Rel**ease + Eli**x**ir, a nod to keeping releases relaxed
 - All modules renamed: `RodarRelease` → `Relex`, `RodarRelease.Helpers` → `Relex.Helpers`
 - All mix tasks renamed: `mix rodar_release.*` → `mix relex.*`
-- Config keys renamed: `config :rodar_release` → `config :relex`
+
+### Added
+
+- `Relex.Config` module for reading `.relex.exs` configuration files
+- `mix relex.init` task to scaffold `CHANGELOG.md` and `.relex.exs` in new projects
+
+### Removed
+
+- Igniter integration and `mix relex.install` task
+- `ex_doc` and `igniter` dependencies — relex now has zero dependencies
+- Hex package metadata
 
 ### Fixed
 

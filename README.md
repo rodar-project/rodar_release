@@ -4,73 +4,45 @@ Relaxed release management for Elixir projects. Automates semantic version bumpi
 
 **Rel**ease + Eli**x**ir = **Relex** — because shipping versions should feel like a `mix` away from relaxing.
 
+> **Note:** This project is developed extensively with AI-assisted engineering. While every effort is made to ensure quality, use it at your own risk and always review the changes it makes to your project.
+
 ## Installation
 
-Add `relex` to your list of dependencies in `mix.exs`:
+Install relex as a mix archive (globally available in any project):
+
+```bash
+mix archive.install hex relex
+```
+
+Then in your project, run the init task to scaffold `CHANGELOG.md` and a `.relex.exs` config template:
+
+```bash
+mix relex.init
+mix relex.init --ai-cmd gemini
+```
+
+## Configuration
+
+Relex reads configuration from `.relex.exs` in your project root (like `.formatter.exs`).
+Create one manually or via `mix relex.init`:
 
 ```elixir
-def deps do
-  [
-    {:relex, "~> 0.1.0"}
-  ]
-end
+# .relex.exs
+[
+  ai_cmd: {"gemini", ["-p"]},
+  branch_pre: %{
+    "staging" => "rc",
+    ~r/^preview\// => "beta"
+  }
+]
 ```
 
-### With Igniter
+Both keys are optional. Defaults:
 
-If your project uses [Igniter](https://hex.pm/packages/igniter), you can install with automatic setup:
-
-```bash
-mix igniter.install relex
-```
-
-This creates a `CHANGELOG.md` with the standard [Keep a Changelog](https://keepachangelog.com) structure if one doesn't exist. To also configure a custom AI CLI:
-
-```bash
-mix igniter.install relex --ai-cmd gemini
-```
-
-### Without Igniter
-
-If your project does not use Igniter, follow these steps after adding the dependency:
-
-1. **Create `CHANGELOG.md`** in your project root with the [Keep a Changelog](https://keepachangelog.com) structure:
-
-    ```markdown
-    # Changelog
-
-    All notable changes to this project will be documented in this file.
-
-    The format is based on [Keep a Changelog](https://keepachangelog.com),
-    and this project adheres to [Semantic Versioning](https://semver.org).
-
-    ## [Unreleased]
-
-    ## [0.1.0] - 2026-01-01
-
-    ### Added
-
-    - Initial release
-    ```
-
-    Replace `0.1.0` with your current version and `2026-01-01` with today's date.
-
-2. **(Optional) Configure AI CLI** for changelog generation in `config/config.exs`:
-
-    ```elixir
-    config :relex, :ai_cmd, {"claude", ["-p"]}   # default (Claude Code)
-    config :relex, :ai_cmd, {"gemini", ["-p"]}   # Gemini CLI
-    config :relex, :ai_cmd, {"codex", ["e"]}     # OpenAI Codex
-    config :relex, :ai_cmd, {"gh", ["-p"]}       # GitHub Copilot
-    ```
-
-    If omitted, [Claude Code](https://claude.com/claude-code) is used by default.
-
-3. **(Recommended) Install the changelog skill** for AI-assisted dev tools:
-
-    ```bash
-    npx skills add relex-project/relex_skills --skill changelog
-    ```
+| Key | Default | Description |
+|-----|---------|-------------|
+| `ai_cmd` | `{"claude", ["-p"]}` | AI CLI for changelog generation |
+| `branch_pre` | `%{}` | Custom branch-to-suffix mappings (merged with built-in defaults) |
 
 ## Semantic Versioning
 
@@ -110,13 +82,15 @@ main:    1.2.0 (stable)
 - `--pre` on a mapped branch **overrides** the auto-inferred suffix
 - Labels must be alphanumeric and start with a letter (e.g., `rc`, `beta`, `dev`, `alpha`)
 
-Custom branch mappings can be configured in `config.exs`:
+Custom branch mappings can be configured in `.relex.exs`:
 
 ```elixir
-config :relex, :branch_pre, %{
-  "staging" => "rc",
-  ~r/^preview\// => "beta"
-}
+[
+  branch_pre: %{
+    "staging" => "rc",
+    ~r/^preview\// => "beta"
+  }
+]
 ```
 
 > Build metadata (e.g. `1.0.0+build.42`) is part of the semver spec but is not currently supported by this tool.
@@ -152,12 +126,10 @@ mix relex.minor --dry-run    # preview changes
 
 When releasing with an empty `[Unreleased]` section, the tool gathers the git log and diff since the last tag and asks an AI CLI to suggest a changelog entry using [Keep a Changelog](https://keepachangelog.com) headings (`### Added`, `### Changed`, `### Fixed`, `### Removed`). You are prompted to confirm before anything is written.
 
-By default it uses [Claude Code](https://claude.com/claude-code). To use a different AI CLI, configure the command and args in your `config.exs`:
+By default it uses [Claude Code](https://claude.com/claude-code). To use a different AI CLI, configure it in `.relex.exs`:
 
 ```elixir
-config :relex, :ai_cmd, {"claude", ["-p"]}   # default
-config :relex, :ai_cmd, {"gemini", ["-p"]}   # Gemini CLI
-config :relex, :ai_cmd, {"codex", ["e"]}     # OpenAI Codex
+[ai_cmd: {"gemini", ["-p"]}]
 ```
 
 The prompt is appended as the last argument.
