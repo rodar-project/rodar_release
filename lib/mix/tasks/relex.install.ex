@@ -1,11 +1,11 @@
 if Code.ensure_loaded?(Igniter) do
-  defmodule Mix.Tasks.RodarRelease.Install do
-    @shortdoc "Set up rodar_release in your project"
+  defmodule Mix.Tasks.Relex.Install do
+    @shortdoc "Set up relex in your project"
 
     @moduledoc """
-    Sets up rodar_release in your project.
+    Sets up relex in your project.
 
-        mix igniter.install rodar_release
+        mix igniter.install relex
 
     ## What it does
 
@@ -13,7 +13,7 @@ if Code.ensure_loaded?(Igniter) do
         if one does not already exist
       * Optionally configures `:ai_cmd` in `config/config.exs`
       * Suggests installing the `changelog` skill from
-        [rodar-project/rodar_skills](https://github.com/rodar-project/rodar_skills)
+        [relex-project/relex_skills](https://github.com/relex-project/relex_skills)
         for AI-assisted dev tools
 
     ## Options
@@ -28,8 +28,8 @@ if Code.ensure_loaded?(Igniter) do
     @impl Igniter.Mix.Task
     def info(_argv, _composing_task) do
       %Igniter.Mix.Task.Info{
-        group: :rodar_release,
-        example: "mix igniter.install rodar_release",
+        group: :relex,
+        example: "mix igniter.install relex",
         schema: [ai_cmd: :string]
       }
     end
@@ -79,7 +79,7 @@ if Code.ensure_loaded?(Igniter) do
           Igniter.Project.Config.configure(
             igniter,
             "config.exs",
-            :rodar_release,
+            :relex,
             [:ai_cmd],
             ai_preset(name)
           )
@@ -96,14 +96,14 @@ if Code.ensure_loaded?(Igniter) do
       Igniter.add_notice(igniter, """
       📋 Recommended: install the changelog skill for AI-assisted dev tools:
 
-          npx skills add rodar-project/rodar_skills --skill changelog
+          npx skills add relex-project/relex_skills --skill changelog
 
       See https://www.npmjs.com/package/skills for more options.
       """)
     end
 
     defp read_current_version do
-      RodarRelease.read_version()
+      Relex.read_version()
     rescue
       _ -> "0.1.0"
     end

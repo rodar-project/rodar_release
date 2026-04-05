@@ -1,12 +1,12 @@
-defmodule Mix.Tasks.RodarRelease.Rollback do
+defmodule Mix.Tasks.Relex.Rollback do
   @shortdoc "Undo the last release"
 
   @moduledoc """
   Undoes the last release by deleting its tag and resetting the release commit.
 
-      mix rodar_release.rollback           # soft reset (keep changes staged)
-      mix rodar_release.rollback --hard    # discard all release changes
-      mix rodar_release.rollback --dry-run # preview rollback
+      mix relex.rollback           # soft reset (keep changes staged)
+      mix relex.rollback --hard    # discard all release changes
+      mix relex.rollback --dry-run # preview rollback
 
   Requires the latest commit to be a release commit (`release: vX.Y.Z`).
 
@@ -24,7 +24,7 @@ defmodule Mix.Tasks.RodarRelease.Rollback do
 
   use Mix.Task
 
-  import RodarRelease.Helpers
+  import Relex.Helpers
 
   @impl Mix.Task
   def run(args) do

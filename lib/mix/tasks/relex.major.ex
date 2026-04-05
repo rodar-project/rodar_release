@@ -1,4 +1,4 @@
-defmodule Mix.Tasks.RodarRelease.Major do
+defmodule Mix.Tasks.Relex.Major do
   @shortdoc "Bump the major version and release"
 
   @moduledoc """
@@ -6,9 +6,9 @@ defmodule Mix.Tasks.RodarRelease.Major do
 
   Use when introducing breaking changes that require consumers to update their code.
 
-      mix rodar_release.major              # 1.0.8 -> 2.0.0
-      mix rodar_release.major --pre rc     # 1.0.8 -> 2.0.0-rc.1
-      mix rodar_release.major --dry-run    # preview changes
+      mix relex.major              # 1.0.8 -> 2.0.0
+      mix relex.major --pre rc     # 1.0.8 -> 2.0.0-rc.1
+      mix relex.major --dry-run    # preview changes
 
   ## Options
 
@@ -21,6 +21,6 @@ defmodule Mix.Tasks.RodarRelease.Major do
 
   @impl Mix.Task
   def run(args) do
-    Mix.Tasks.RodarRelease.Bump.run(:major, args)
+    Mix.Tasks.Relex.Bump.run(:major, args)
   end
 end

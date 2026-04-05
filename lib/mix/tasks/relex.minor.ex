@@ -1,4 +1,4 @@
-defmodule Mix.Tasks.RodarRelease.Minor do
+defmodule Mix.Tasks.Relex.Minor do
   @shortdoc "Bump the minor version and release"
 
   @moduledoc """
@@ -6,9 +6,9 @@ defmodule Mix.Tasks.RodarRelease.Minor do
 
   Use when adding new features or deprecating existing functionality in a backward-compatible way.
 
-      mix rodar_release.minor              # 1.0.8 -> 1.1.0
-      mix rodar_release.minor --pre rc     # 1.0.8 -> 1.1.0-rc.1
-      mix rodar_release.minor --dry-run    # preview changes
+      mix relex.minor              # 1.0.8 -> 1.1.0
+      mix relex.minor --pre rc     # 1.0.8 -> 1.1.0-rc.1
+      mix relex.minor --dry-run    # preview changes
 
   ## Options
 
@@ -21,6 +21,6 @@ defmodule Mix.Tasks.RodarRelease.Minor do
 
   @impl Mix.Task
   def run(args) do
-    Mix.Tasks.RodarRelease.Bump.run(:minor, args)
+    Mix.Tasks.Relex.Bump.run(:minor, args)
   end
 end

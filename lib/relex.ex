@@ -1,9 +1,9 @@
-defmodule RodarRelease do
+defmodule Relex do
   @moduledoc """
   Version management and release utilities.
 
   The version lives directly in `mix.exs` as the single source of truth.
-  At release time, `mix rodar_release.patch|minor|major` bumps it, updates
+  At release time, `mix relex.patch|minor|major` bumps it, updates
   CHANGELOG.md (including comparison links), and commits. Stable releases
   are also tagged; pre-release versions skip tagging by default to avoid
   polluting the tags list. Use `--no-tag` to skip tagging on any release.
@@ -23,27 +23,27 @@ defmodule RodarRelease do
     * `develop` — `-dev`
     * `release/*` — `-rc`
     * `hotfix/*` — `-rc`
-    * custom mappings via `config :rodar_release, :branch_pre, %{...}`
+    * custom mappings via `config :relex, :branch_pre, %{...}`
 
   ## Releasing
 
-      mix rodar_release.patch              # bug fix (on main)
-      mix rodar_release.minor              # new feature (on main)
-      mix rodar_release.major              # breaking change (on main)
-      mix rodar_release.minor              # on develop: 1.1.0 -> 1.2.0-dev.1
-      mix rodar_release.patch              # on develop: 1.2.0-dev.1 -> 1.2.0-dev.2
-      mix rodar_release.patch              # on release/*: 1.2.0-dev.3 -> 1.2.0-rc.1
-      mix rodar_release.patch --dry-run    # preview
+      mix relex.patch              # bug fix (on main)
+      mix relex.minor              # new feature (on main)
+      mix relex.major              # breaking change (on main)
+      mix relex.minor              # on develop: 1.1.0 -> 1.2.0-dev.1
+      mix relex.patch              # on develop: 1.2.0-dev.1 -> 1.2.0-dev.2
+      mix relex.patch              # on release/*: 1.2.0-dev.3 -> 1.2.0-rc.1
+      mix relex.patch --dry-run    # preview
 
   ## Post-merge promotion
 
   After merging a development branch into `main`, the version will have a
-  pre-release suffix (e.g. `1.5.1-dev.3`). Use `mix rodar_release.merge` to
+  pre-release suffix (e.g. `1.5.1-dev.3`). Use `mix relex.merge` to
   promote it to a stable release:
 
-      mix rodar_release.merge              # 1.5.1-dev.3 -> 1.5.1
-      mix rodar_release.merge minor        # 1.5.1-dev.3 -> 1.6.0
-      mix rodar_release.merge major        # 1.5.1-dev.3 -> 2.0.0
+      mix relex.merge              # 1.5.1-dev.3 -> 1.5.1
+      mix relex.merge minor        # 1.5.1-dev.3 -> 1.6.0
+      mix relex.merge major        # 1.5.1-dev.3 -> 2.0.0
 
   The regular `patch/minor/major` tasks will detect a leftover pre-release
   suffix on a stable branch and point you to `merge` instead.
@@ -55,37 +55,37 @@ defmodule RodarRelease do
   The AI CLI defaults to Claude Code (`{"claude", ["-p"]}`) and can be
   configured via:
 
-      config :rodar_release, :ai_cmd, {"codex", ["e"]}
+      config :relex, :ai_cmd, {"codex", ["e"]}
 
   ## Installation
 
   If your project uses [Igniter](https://hex.pm/packages/igniter):
 
-      mix igniter.install rodar_release
+      mix igniter.install relex
 
   Otherwise, create a `CHANGELOG.md` with the
   [Keep a Changelog](https://keepachangelog.com) structure and optionally
   configure `:ai_cmd` in `config/config.exs`:
 
-      config :rodar_release, :ai_cmd, {"gemini", ["-p"]}
+      config :relex, :ai_cmd, {"gemini", ["-p"]}
 
   Custom branch-to-suffix mappings can also be configured:
 
-      config :rodar_release, :branch_pre, %{
+      config :relex, :branch_pre, %{
         "staging" => "rc",
         ~r/^preview\\// => "beta"
       }
 
-  See the [README](https://github.com/rodar-project/rodar_release#without-igniter)
+  See the [README](https://github.com/relex-project/relex#without-igniter)
   for full manual setup instructions.
 
   ## Rollback & Amend
 
-      mix rodar_release.rollback           # undo last release (soft reset)
-      mix rodar_release.rollback --hard    # undo and discard changes
-      mix rodar_release.amend              # fold changes into release commit
+      mix relex.rollback           # undo last release (soft reset)
+      mix relex.rollback --hard    # undo and discard changes
+      mix relex.amend              # fold changes into release commit
 
-  Run `mix help rodar_release` for the full list of commands.
+  Run `mix help relex` for the full list of commands.
   """
 
   @version_pattern ~r/version:\s*"(\d+\.\d+\.\d+(?:-[a-zA-Z0-9]+\.\d+)?)"/
@@ -100,7 +100,7 @@ defmodule RodarRelease do
   ## Examples
 
       iex> File.write!("test_mix.exs", ~s|version: "1.2.3"|)
-      iex> RodarRelease.read_version(file: "test_mix.exs")
+      iex> Relex.read_version(file: "test_mix.exs")
       "1.2.3"
       iex> File.rm!("test_mix.exs")
 
@@ -159,22 +159,22 @@ defmodule RodarRelease do
 
   ## Examples
 
-      iex> RodarRelease.bump("1.0.8", :patch)
+      iex> Relex.bump("1.0.8", :patch)
       "1.0.9"
 
-      iex> RodarRelease.bump("1.0.8", :minor)
+      iex> Relex.bump("1.0.8", :minor)
       "1.1.0"
 
-      iex> RodarRelease.bump("1.0.8", :major)
+      iex> Relex.bump("1.0.8", :major)
       "2.0.0"
 
-      iex> RodarRelease.bump("1.1.0", :minor, "rc")
+      iex> Relex.bump("1.1.0", :minor, "rc")
       "1.2.0-rc.1"
 
-      iex> RodarRelease.bump("1.2.0-rc.1", :patch, "rc")
+      iex> Relex.bump("1.2.0-rc.1", :patch, "rc")
       "1.2.0-rc.2"
 
-      iex> RodarRelease.bump("1.2.0-rc.2", :patch)
+      iex> Relex.bump("1.2.0-rc.2", :patch)
       "1.2.0"
 
   """
@@ -228,13 +228,13 @@ defmodule RodarRelease do
 
   ## Examples
 
-      iex> RodarRelease.promote("1.5.1-dev.3")
+      iex> Relex.promote("1.5.1-dev.3")
       "1.5.1"
 
-      iex> RodarRelease.promote("1.5.1-dev.3", :minor)
+      iex> Relex.promote("1.5.1-dev.3", :minor)
       "1.6.0"
 
-      iex> RodarRelease.promote("1.5.1-dev.3", :major)
+      iex> Relex.promote("1.5.1-dev.3", :major)
       "2.0.0"
 
   """
@@ -278,10 +278,10 @@ defmodule RodarRelease do
 
   ## Examples
 
-      iex> RodarRelease.has_pre?("1.0.0-rc.1")
+      iex> Relex.has_pre?("1.0.0-rc.1")
       true
 
-      iex> RodarRelease.has_pre?("1.0.0")
+      iex> Relex.has_pre?("1.0.0")
       false
 
   """

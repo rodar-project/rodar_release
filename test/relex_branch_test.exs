@@ -1,7 +1,7 @@
-defmodule RodarReleaseBranchTest do
+defmodule RelexBranchTest do
   use ExUnit.Case
 
-  import RodarRelease.Helpers, only: [resolve_pre: 2]
+  import Relex.Helpers, only: [resolve_pre: 2]
 
   describe "resolve_pre/2 on main/master" do
     test "main without --pre returns stable" do
@@ -80,21 +80,21 @@ defmodule RodarReleaseBranchTest do
 
   describe "resolve_pre/2 with custom config" do
     setup do
-      on_exit(fn -> Application.delete_env(:rodar_release, :branch_pre) end)
+      on_exit(fn -> Application.delete_env(:relex, :branch_pre) end)
     end
 
     test "custom exact branch mapping" do
-      Application.put_env(:rodar_release, :branch_pre, %{"staging" => "rc"})
+      Application.put_env(:relex, :branch_pre, %{"staging" => "rc"})
       assert resolve_pre("staging", nil) == {:ok, "rc"}
     end
 
     test "custom pattern mapping" do
-      Application.put_env(:rodar_release, :branch_pre, %{~r/^preview\// => "beta"})
+      Application.put_env(:relex, :branch_pre, %{~r/^preview\// => "beta"})
       assert resolve_pre("preview/v2", nil) == {:ok, "beta"}
     end
 
     test "custom mapping overrides default" do
-      Application.put_env(:rodar_release, :branch_pre, %{"develop" => "snapshot"})
+      Application.put_env(:relex, :branch_pre, %{"develop" => "snapshot"})
       assert resolve_pre("develop", nil) == {:ok, "snapshot"}
     end
   end

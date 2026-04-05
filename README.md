@@ -1,15 +1,17 @@
-# RodarRelease
+# Relex
 
-Version management and release utilities for Rodar projects. Automates semantic version bumping, changelog updates, git commits/tags.
+Relaxed release management for Elixir projects. Automates semantic version bumping, changelog updates, git commits/tags.
+
+**Rel**ease + Eli**x**ir = **Relex** — because shipping versions should feel like a `mix` away from relaxing.
 
 ## Installation
 
-Add `rodar_release` to your list of dependencies in `mix.exs`:
+Add `relex` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
   [
-    {:rodar_release, "~> 0.1.0"}
+    {:relex, "~> 0.1.0"}
   ]
 end
 ```
@@ -19,13 +21,13 @@ end
 If your project uses [Igniter](https://hex.pm/packages/igniter), you can install with automatic setup:
 
 ```bash
-mix igniter.install rodar_release
+mix igniter.install relex
 ```
 
 This creates a `CHANGELOG.md` with the standard [Keep a Changelog](https://keepachangelog.com) structure if one doesn't exist. To also configure a custom AI CLI:
 
 ```bash
-mix igniter.install rodar_release --ai-cmd gemini
+mix igniter.install relex --ai-cmd gemini
 ```
 
 ### Without Igniter
@@ -56,10 +58,10 @@ If your project does not use Igniter, follow these steps after adding the depend
 2. **(Optional) Configure AI CLI** for changelog generation in `config/config.exs`:
 
     ```elixir
-    config :rodar_release, :ai_cmd, {"claude", ["-p"]}   # default (Claude Code)
-    config :rodar_release, :ai_cmd, {"gemini", ["-p"]}   # Gemini CLI
-    config :rodar_release, :ai_cmd, {"codex", ["e"]}     # OpenAI Codex
-    config :rodar_release, :ai_cmd, {"gh", ["-p"]}       # GitHub Copilot
+    config :relex, :ai_cmd, {"claude", ["-p"]}   # default (Claude Code)
+    config :relex, :ai_cmd, {"gemini", ["-p"]}   # Gemini CLI
+    config :relex, :ai_cmd, {"codex", ["e"]}     # OpenAI Codex
+    config :relex, :ai_cmd, {"gh", ["-p"]}       # GitHub Copilot
     ```
 
     If omitted, [Claude Code](https://claude.com/claude-code) is used by default.
@@ -67,16 +69,16 @@ If your project does not use Igniter, follow these steps after adding the depend
 3. **(Recommended) Install the changelog skill** for AI-assisted dev tools:
 
     ```bash
-    npx skills add rodar-project/rodar_skills --skill changelog
+    npx skills add relex-project/relex_skills --skill changelog
     ```
 
 ## Semantic Versioning
 
 This tool follows [Semantic Versioning](https://semver.org) (`MAJOR.MINOR.PATCH`):
 
-- **Patch** (`mix rodar_release.patch`) — backward-compatible bug fixes. Use when you fix a bug without changing the public API.
-- **Minor** (`mix rodar_release.minor`) — new functionality that is backward-compatible. Use when you add a feature, deprecate something, or make non-breaking changes.
-- **Major** (`mix rodar_release.major`) — breaking changes. Use when you remove or change existing behavior in a way that requires consumers to update their code.
+- **Patch** (`mix relex.patch`) — backward-compatible bug fixes. Use when you fix a bug without changing the public API.
+- **Minor** (`mix relex.minor`) — new functionality that is backward-compatible. Use when you add a feature, deprecate something, or make non-breaking changes.
+- **Major** (`mix relex.major`) — breaking changes. Use when you remove or change existing behavior in a way that requires consumers to update their code.
 
 ### Pre-release versions
 
@@ -111,7 +113,7 @@ main:    1.2.0 (stable)
 Custom branch mappings can be configured in `config.exs`:
 
 ```elixir
-config :rodar_release, :branch_pre, %{
+config :relex, :branch_pre, %{
   "staging" => "rc",
   ~r/^preview\// => "beta"
 }
@@ -122,8 +124,8 @@ config :rodar_release, :branch_pre, %{
 ## Usage
 
 ```bash
-mix rodar_release              # list available commands
-mix help rodar_release.patch   # help for a specific command
+mix relex              # list available commands
+mix help relex.patch   # help for a specific command
 ```
 
 ### Commands
@@ -131,11 +133,11 @@ mix help rodar_release.patch   # help for a specific command
 #### Release
 
 ```bash
-mix rodar_release.patch              # bug fix:         1.0.8 -> 1.0.9
-mix rodar_release.minor              # new feature:     1.0.8 -> 1.1.0
-mix rodar_release.major              # breaking change: 1.0.8 -> 2.0.0
-mix rodar_release.minor --pre rc     # pre-release:     1.1.0 -> 1.2.0-rc.1
-mix rodar_release.minor --dry-run    # preview changes
+mix relex.patch              # bug fix:         1.0.8 -> 1.0.9
+mix relex.minor              # new feature:     1.0.8 -> 1.1.0
+mix relex.major              # breaking change: 1.0.8 -> 2.0.0
+mix relex.minor --pre rc     # pre-release:     1.1.0 -> 1.2.0-rc.1
+mix relex.minor --dry-run    # preview changes
 ```
 
 1. Resolves the pre-release suffix from the current branch (or `--pre` flag)
@@ -153,9 +155,9 @@ When releasing with an empty `[Unreleased]` section, the tool gathers the git lo
 By default it uses [Claude Code](https://claude.com/claude-code). To use a different AI CLI, configure the command and args in your `config.exs`:
 
 ```elixir
-config :rodar_release, :ai_cmd, {"claude", ["-p"]}   # default
-config :rodar_release, :ai_cmd, {"gemini", ["-p"]}   # Gemini CLI
-config :rodar_release, :ai_cmd, {"codex", ["e"]}     # OpenAI Codex
+config :relex, :ai_cmd, {"claude", ["-p"]}   # default
+config :relex, :ai_cmd, {"gemini", ["-p"]}   # Gemini CLI
+config :relex, :ai_cmd, {"codex", ["e"]}     # OpenAI Codex
 ```
 
 The prompt is appended as the last argument.
@@ -163,16 +165,16 @@ The prompt is appended as the last argument.
 #### Merge (post-merge promotion)
 
 ```bash
-mix rodar_release.merge              # 1.5.1-dev.3 -> 1.5.1
-mix rodar_release.merge minor        # 1.5.1-dev.3 -> 1.6.0
-mix rodar_release.merge major        # 1.5.1-dev.3 -> 2.0.0
-mix rodar_release.merge --dry-run    # preview changes
-mix rodar_release.merge --no-tag     # promote without tagging
+mix relex.merge              # 1.5.1-dev.3 -> 1.5.1
+mix relex.merge minor        # 1.5.1-dev.3 -> 1.6.0
+mix relex.merge major        # 1.5.1-dev.3 -> 2.0.0
+mix relex.merge --dry-run    # preview changes
+mix relex.merge --no-tag     # promote without tagging
 ```
 
 Promotes a pre-release version to stable after merging a development branch into `main`/`master`. Without arguments, strips the pre-release suffix. Pass a segment to bump higher.
 
-If you run `mix rodar_release.patch` (or `minor`/`major`) on a stable branch and the current version has a pre-release suffix, the task will detect this and suggest using `merge` instead.
+If you run `mix relex.patch` (or `minor`/`major`) on a stable branch and the current version has a pre-release suffix, the task will detect this and suggest using `merge` instead.
 
 #### Tagging behavior
 
@@ -183,9 +185,9 @@ Use `--no-tag` to skip tagging on any release, including stable ones.
 #### Rollback
 
 ```bash
-mix rodar_release.rollback           # undo last release (soft reset)
-mix rodar_release.rollback --hard    # undo and discard changes
-mix rodar_release.rollback --dry-run # preview rollback
+mix relex.rollback           # undo last release (soft reset)
+mix relex.rollback --hard    # undo and discard changes
+mix relex.rollback --dry-run # preview rollback
 ```
 
 Undoes the last release by deleting its tag and resetting the release commit. Requires the latest commit to be a release commit (`release: vX.Y.Z`).
@@ -196,8 +198,8 @@ Undoes the last release by deleting its tag and resetting the release commit. Re
 #### Amend
 
 ```bash
-mix rodar_release.amend              # fold changes into release commit
-mix rodar_release.amend --dry-run    # preview amend
+mix relex.amend              # fold changes into release commit
+mix relex.amend --dry-run    # preview amend
 ```
 
 Amends the last release commit with any current changes and re-tags. Useful for fixing a typo or adding a missing file right after releasing.
@@ -214,26 +216,26 @@ Amends the last release commit with any current changes and re-tags. Useful for 
 ### Programmatic API
 
 ```elixir
-RodarRelease.read_version()
+Relex.read_version()
 #=> "1.2.0"
 
-RodarRelease.bump("1.2.3", :minor)
+Relex.bump("1.2.3", :minor)
 #=> "1.3.0"
 
-RodarRelease.bump("1.1.0", :minor, "rc")
+Relex.bump("1.1.0", :minor, "rc")
 #=> "1.2.0-rc.1"
 
-RodarRelease.bump("1.2.0-rc.1", :patch, "rc")
+Relex.bump("1.2.0-rc.1", :patch, "rc")
 #=> "1.2.0-rc.2"
 
-RodarRelease.bump("1.2.0-rc.2", :patch)
+Relex.bump("1.2.0-rc.2", :patch)
 #=> "1.2.0"
 
-RodarRelease.promote("1.5.1-dev.3", :minor)
+Relex.promote("1.5.1-dev.3", :minor)
 #=> "1.6.0"
 
-RodarRelease.has_pre?("1.2.0-rc.1")
+Relex.has_pre?("1.2.0-rc.1")
 #=> true
 
-RodarRelease.write_version("1.3.0")
+Relex.write_version("1.3.0")
 ```

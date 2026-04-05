@@ -1,7 +1,7 @@
-defmodule RodarRelease.TaggingTest do
+defmodule Relex.TaggingTest do
   use ExUnit.Case
 
-  import RodarRelease.Helpers, only: [execute_release: 3]
+  import Relex.Helpers, only: [execute_release: 3]
 
   @test_dir "test_tagging_repo"
 
@@ -101,7 +101,7 @@ defmodule RodarRelease.TaggingTest do
       in_dir(fn ->
         output = capture_shell(fn -> execute_release("1.1.0-dev.1", "2026-03-31", []) end)
 
-        assert output =~ "git push origin develop\n"
+        assert output =~ "  git push origin develop"
         refute output =~ "--tags"
       end)
     end
@@ -110,7 +110,7 @@ defmodule RodarRelease.TaggingTest do
       in_dir(fn ->
         output = capture_shell(fn -> execute_release("1.1.0", "2026-03-31", no_tag: true) end)
 
-        assert output =~ "git push origin develop\n"
+        assert output =~ "  git push origin develop"
         refute output =~ "--tags"
       end)
     end

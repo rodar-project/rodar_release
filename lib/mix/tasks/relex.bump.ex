@@ -1,7 +1,7 @@
-defmodule Mix.Tasks.RodarRelease.Bump do
+defmodule Mix.Tasks.Relex.Bump do
   @moduledoc false
 
-  import RodarRelease.Helpers
+  import Relex.Helpers
 
   def run(bump, args) do
     {opts, _, _} =
@@ -23,13 +23,13 @@ defmodule Mix.Tasks.RodarRelease.Bump do
   end
 
   defp do_run(bump, pre, branch, dry_run, opts) do
-    current_version = RodarRelease.read_version()
+    current_version = Relex.read_version()
 
-    if pre == nil and RodarRelease.has_pre?(current_version) do
+    if pre == nil and Relex.has_pre?(current_version) do
       Mix.raise(
         "Current version #{current_version} has a pre-release suffix on #{branch}.\n" <>
           "This typically happens after merging a development branch.\n\n" <>
-          "Use `mix rodar_release.merge` to promote the pre-release version."
+          "Use `mix relex.merge` to promote the pre-release version."
       )
     end
 
@@ -37,7 +37,7 @@ defmodule Mix.Tasks.RodarRelease.Bump do
       validate_clean_working_tree!()
     end
 
-    release_version = RodarRelease.bump(current_version, bump, pre)
+    release_version = Relex.bump(current_version, bump, pre)
     today = Date.utc_today() |> Date.to_iso8601()
 
     Mix.shell().info("Release plan:")

@@ -1,4 +1,4 @@
-defmodule Mix.Tasks.RodarRelease.Patch do
+defmodule Mix.Tasks.Relex.Patch do
   @shortdoc "Bump the patch version and release"
 
   @moduledoc """
@@ -6,10 +6,10 @@ defmodule Mix.Tasks.RodarRelease.Patch do
 
   Use for backward-compatible bug fixes that don't add new functionality.
 
-      mix rodar_release.patch              # 1.0.8 -> 1.0.9
-      mix rodar_release.patch --pre rc     # 1.0.8 -> 1.0.9-rc.1
-      mix rodar_release.patch              # 1.0.9-rc.1 -> 1.0.9 (promote)
-      mix rodar_release.patch --dry-run    # preview changes
+      mix relex.patch              # 1.0.8 -> 1.0.9
+      mix relex.patch --pre rc     # 1.0.8 -> 1.0.9-rc.1
+      mix relex.patch              # 1.0.9-rc.1 -> 1.0.9 (promote)
+      mix relex.patch --dry-run    # preview changes
 
   ## Options
 
@@ -22,6 +22,6 @@ defmodule Mix.Tasks.RodarRelease.Patch do
 
   @impl Mix.Task
   def run(args) do
-    Mix.Tasks.RodarRelease.Bump.run(:patch, args)
+    Mix.Tasks.Relex.Bump.run(:patch, args)
   end
 end

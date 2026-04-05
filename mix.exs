@@ -1,18 +1,18 @@
-defmodule RodarRelease.MixProject do
+defmodule Relex.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :rodar_release,
+      app: :relex,
       version: "1.6.0",
       elixir: "~> 1.16",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      description: "Version management and release utilities for Rodar projects",
+      description: "Relaxed release management for Elixir projects",
       package: package(),
       docs: docs(),
-      source_url: "https://github.com/rodar-project/rodar_release",
-      homepage_url: "https://github.com/rodar-project/rodar_release"
+      source_url: "https://github.com/relex-project/relex",
+      homepage_url: "https://github.com/relex-project/relex"
     ]
   end
 
@@ -24,7 +24,7 @@ defmodule RodarRelease.MixProject do
 
   defp docs do
     [
-      main: "RodarRelease",
+      main: "Relex",
       extras: ["README.md", "CHANGELOG.md"]
     ]
   end
@@ -33,7 +33,7 @@ defmodule RodarRelease.MixProject do
     [
       maintainers: ["Rodrigo Couto <r@rodg.co>"],
       licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/rodar-project/rodar_release"},
+      links: %{"GitHub" => "https://github.com/relex-project/relex"},
       files: ~w(lib mix.exs README.md LICENSE CHANGELOG.md)
     ]
   end

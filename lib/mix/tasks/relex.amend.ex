@@ -1,11 +1,11 @@
-defmodule Mix.Tasks.RodarRelease.Amend do
+defmodule Mix.Tasks.Relex.Amend do
   @shortdoc "Fold changes into the last release commit"
 
   @moduledoc """
   Amends the last release commit with any current changes and re-tags.
 
-      mix rodar_release.amend              # fold changes into release commit
-      mix rodar_release.amend --dry-run    # preview amend
+      mix relex.amend              # fold changes into release commit
+      mix relex.amend --dry-run    # preview amend
 
   Useful for fixing a typo or adding a missing file right after releasing.
 
@@ -19,7 +19,7 @@ defmodule Mix.Tasks.RodarRelease.Amend do
 
   use Mix.Task
 
-  import RodarRelease.Helpers
+  import Relex.Helpers
 
   @impl Mix.Task
   def run(args) do

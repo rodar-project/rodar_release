@@ -1,4 +1,4 @@
-defmodule Mix.Tasks.RodarRelease.MergeTest do
+defmodule Mix.Tasks.Relex.MergeTest do
   use ExUnit.Case
 
   @test_dir "test_merge_repo"
@@ -43,7 +43,7 @@ defmodule Mix.Tasks.RodarRelease.MergeTest do
   describe "merge (no segment)" do
     test "promotes pre-release to base version" do
       in_dir(fn ->
-        Mix.Tasks.RodarRelease.Merge.run([])
+        Mix.Tasks.Relex.Merge.run([])
 
         assert File.read!("mix.exs") =~ ~s|version: "1.5.1"|
 
@@ -59,7 +59,7 @@ defmodule Mix.Tasks.RodarRelease.MergeTest do
   describe "merge patch" do
     test "promotes pre-release to next patch version" do
       in_dir(fn ->
-        Mix.Tasks.RodarRelease.Merge.run(["patch"])
+        Mix.Tasks.Relex.Merge.run(["patch"])
 
         assert File.read!("mix.exs") =~ ~s|version: "1.5.2"|
 
@@ -75,7 +75,7 @@ defmodule Mix.Tasks.RodarRelease.MergeTest do
   describe "merge minor" do
     test "promotes pre-release to next minor version" do
       in_dir(fn ->
-        Mix.Tasks.RodarRelease.Merge.run(["minor"])
+        Mix.Tasks.Relex.Merge.run(["minor"])
 
         assert File.read!("mix.exs") =~ ~s|version: "1.6.0"|
 
@@ -88,7 +88,7 @@ defmodule Mix.Tasks.RodarRelease.MergeTest do
   describe "merge major" do
     test "promotes pre-release to next major version" do
       in_dir(fn ->
-        Mix.Tasks.RodarRelease.Merge.run(["major"])
+        Mix.Tasks.Relex.Merge.run(["major"])
 
         assert File.read!("mix.exs") =~ ~s|version: "2.0.0"|
 
@@ -101,7 +101,7 @@ defmodule Mix.Tasks.RodarRelease.MergeTest do
   describe "merge --dry-run" do
     test "shows plan without making changes" do
       in_dir(fn ->
-        Mix.Tasks.RodarRelease.Merge.run(["patch", "--dry-run"])
+        Mix.Tasks.Relex.Merge.run(["patch", "--dry-run"])
 
         # Version should be unchanged
         assert File.read!("mix.exs") =~ ~s|version: "1.5.1-dev.3"|
@@ -116,7 +116,7 @@ defmodule Mix.Tasks.RodarRelease.MergeTest do
   describe "merge --no-tag" do
     test "skips tagging when --no-tag is passed" do
       in_dir(fn ->
-        Mix.Tasks.RodarRelease.Merge.run(["--no-tag"])
+        Mix.Tasks.Relex.Merge.run(["--no-tag"])
 
         assert File.read!("mix.exs") =~ ~s|version: "1.5.1"|
 
@@ -134,7 +134,7 @@ defmodule Mix.Tasks.RodarRelease.MergeTest do
         git!(["tag", "-a", "v1.5.1", "-m", "existing"])
 
         # Should not raise, because we're skipping tagging
-        Mix.Tasks.RodarRelease.Merge.run(["--no-tag"])
+        Mix.Tasks.Relex.Merge.run(["--no-tag"])
 
         assert File.read!("mix.exs") =~ ~s|version: "1.5.1"|
       end)
@@ -147,7 +147,7 @@ defmodule Mix.Tasks.RodarRelease.MergeTest do
         git!(["checkout", "-b", "develop"])
 
         assert_raise Mix.Error, ~r/merge must be run from main or master/, fn ->
-          Mix.Tasks.RodarRelease.Merge.run(["patch"])
+          Mix.Tasks.Relex.Merge.run(["patch"])
         end
       end)
     end
@@ -159,7 +159,7 @@ defmodule Mix.Tasks.RodarRelease.MergeTest do
         git!(["commit", "-m", "stable version"])
 
         assert_raise Mix.Error, ~r/is not a pre-release/, fn ->
-          Mix.Tasks.RodarRelease.Merge.run(["patch"])
+          Mix.Tasks.Relex.Merge.run(["patch"])
         end
       end)
     end
@@ -169,7 +169,7 @@ defmodule Mix.Tasks.RodarRelease.MergeTest do
         git!(["tag", "-a", "v1.5.2", "-m", "existing"])
 
         assert_raise Mix.Error, ~r/already exists/, fn ->
-          Mix.Tasks.RodarRelease.Merge.run(["patch"])
+          Mix.Tasks.Relex.Merge.run(["patch"])
         end
       end)
     end
@@ -177,7 +177,7 @@ defmodule Mix.Tasks.RodarRelease.MergeTest do
     test "raises when invalid segment given" do
       in_dir(fn ->
         assert_raise Mix.Error, ~r/Invalid segment/, fn ->
-          Mix.Tasks.RodarRelease.Merge.run(["hotfix"])
+          Mix.Tasks.Relex.Merge.run(["hotfix"])
         end
       end)
     end

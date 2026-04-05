@@ -1,4 +1,4 @@
-defmodule RodarRelease.Helpers do
+defmodule Relex.Helpers do
   @moduledoc false
 
   @mix_file "mix.exs"
@@ -177,7 +177,7 @@ defmodule RodarRelease.Helpers do
   end
 
   defp ai_cmd do
-    Application.get_env(:rodar_release, :ai_cmd, {"claude", ["-p"]})
+    Application.get_env(:relex, :ai_cmd, {"claude", ["-p"]})
   end
 
   @default_branch_pre %{
@@ -224,7 +224,7 @@ defmodule RodarRelease.Helpers do
         {:error,
          "Releases are not allowed from branch \"#{branch}\".\n" <>
            "Use main for stable releases or a mapped branch (develop, release/*, etc.) for pre-releases.\n" <>
-           "Configure custom branch mappings via: config :rodar_release, :branch_pre, %{...}"}
+           "Configure custom branch mappings via: config :relex, :branch_pre, %{...}"}
 
       # Mapped branch: use mapped suffix, allow --pre to override
       {suffix, nil} when is_binary(suffix) ->
@@ -253,7 +253,7 @@ defmodule RodarRelease.Helpers do
   end
 
   defp branch_pre_config do
-    custom = Application.get_env(:rodar_release, :branch_pre, %{})
+    custom = Application.get_env(:relex, :branch_pre, %{})
 
     {custom_exact, custom_patterns} =
       Enum.split_with(custom, fn {k, _v} -> is_binary(k) end)
@@ -294,13 +294,13 @@ defmodule RodarRelease.Helpers do
 
   def execute_release(release_version, today, opts \\ []) do
     no_tag = Keyword.get(opts, :no_tag, false)
-    is_prerelease = RodarRelease.has_pre?(release_version)
+    is_prerelease = Relex.has_pre?(release_version)
     skip_tag = no_tag or is_prerelease
 
     maybe_generate_changelog_entry()
 
     step("Updating mix.exs version to #{release_version}", fn ->
-      RodarRelease.write_version(release_version)
+      Relex.write_version(release_version)
     end)
 
     step("Updating CHANGELOG.md with release date", fn ->

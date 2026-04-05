@@ -5,13 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- Renamed project from `rodar_release` to `relex` — **Rel**ease + Eli**x**ir, a nod to keeping releases relaxed
+- All modules renamed: `RodarRelease` → `Relex`, `RodarRelease.Helpers` → `Relex.Helpers`
+- All mix tasks renamed: `mix rodar_release.*` → `mix relex.*`
+- Config keys renamed: `config :rodar_release` → `config :relex`
+
+### Fixed
+
+- Tagging tests no longer rely on trailing newline in captured shell output
+
 ## [1.6.0-dev.1] - 2026-03-30
 
 ### Added
 
-- `mix rodar_release.merge` task to promote pre-release versions after merging into a stable branch
-- `RodarRelease.promote/2` to strip or bump a pre-release version to stable
-- `RodarRelease.has_pre?/1` to check if a version has a pre-release suffix
+- `mix relex.merge` task to promote pre-release versions after merging into a stable branch
+- `Relex.promote/2` to strip or bump a pre-release version to stable
+- `Relex.has_pre?/1` to check if a version has a pre-release suffix
 - Tag existence check before releasing to prevent version collisions
 - Auto-detection of leftover pre-release suffix on stable branches, guiding users to `merge`
 - `--no-tag` flag for all release commands to skip git tag creation
@@ -40,7 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Pre-release version suffixes via `--pre` flag (e.g., `mix rodar_release.minor --pre rc` produces `1.2.0-rc.1`)
+- Pre-release version suffixes via `--pre` flag (e.g., `mix relex.minor --pre rc` produces `1.2.0-rc.1`)
 - Support for incrementing pre-release counters, switching labels, and promoting to stable
 - Pre-release version validation (alphanumeric labels starting with a letter)
 
@@ -62,7 +75,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Recommend [rodar-project/rodar_skills](https://github.com/rodar-project/rodar_skills) changelog skill in README for AI-assisted dev tools
+- Recommend [relex-project/relex_skills](https://github.com/relex-project/relex_skills) changelog skill in README for AI-assisted dev tools
 - Suggest installing the changelog skill via `npx skills` after Igniter setup
 
 ### Changed
@@ -74,17 +87,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - AI-generated changelog entries via Claude Code when `[Unreleased]` is empty or absent at release time
-- Igniter integration for automatic project setup (`mix igniter.install rodar_release`)
+- Igniter integration for automatic project setup (`mix igniter.install relex`)
 
 ### Removed
 
-- `mix rodar_release.publish` task and `--publish` flag (use `mix hex.publish` directly)
+- `mix relex.publish` task and `--publish` flag (use `mix hex.publish` directly)
 
 ## [1.1.0] - 2026-03-22
 
 ### Removed
 
-- `mix rodar_release.publish` task and `--publish` option from release commands
+- `mix relex.publish` task and `--publish` option from release commands
 
 ### Added
 
@@ -112,46 +125,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Refactored mix tasks to use idiomatic Elixir dot notation (e.g., `mix rodar_release.patch` instead of `mix rodar_release patch`)
+- Refactored mix tasks to use idiomatic Elixir dot notation (e.g., `mix relex.patch` instead of `mix relex patch`)
 
 ## [0.2.1] - 2026-03-21
 
 ### Changed
 
-- Consolidated `rollback` and `amend` into subcommands of the unified `mix rodar_release` task
+- Consolidated `rollback` and `amend` into subcommands of the unified `mix relex` task
 
 ## [0.2.0] - 2026-03-21
 
 ### Added
 
-- `mix rodar_release rollback` command to undo the last release
-- `mix rodar_release amend` command to fold changes into the last release commit
+- `mix relex rollback` command to undo the last release
+- `mix relex amend` command to fold changes into the last release commit
 
 ## [0.1.0] - 2026-03-11
 
 ### Added
 
-- Mix task `mix rodar_release` for automated semantic version releases
-- Version reading, writing, and bumping via `RodarRelease` module
+- Mix task `mix relex` for automated semantic version releases
+- Version reading, writing, and bumping via `Relex` module
 - Changelog update support with ISO 8601 release dates
 - Git commit and annotated tag creation
 - `--dry-run` option to preview changes
 
-[Unreleased]: https://github.com/rodar-project/rodar_release/compare/v1.6.0...HEAD
-[1.6.0]: https://github.com/rodar-project/rodar_release/compare/v1.6.0-dev.1...v1.6.0
-[1.6.0-dev.1]: https://github.com/rodar-project/rodar_release/compare/v1.5.0...v1.6.0-dev.1
-[1.5.0]: https://github.com/rodar-project/rodar_release/compare/v1.4.0...v1.5.0
-[1.4.0]: https://github.com/rodar-project/rodar_release/compare/v1.3.0...v1.4.0
-[1.3.0]: https://github.com/rodar-project/rodar_release/compare/v1.2.3...v1.3.0
-[1.2.3]: https://github.com/rodar-project/rodar_release/compare/v1.2.2...v1.2.3
-[1.2.2]: https://github.com/rodar-project/rodar_release/compare/v1.2.1...v1.2.2
-[1.2.1]: https://github.com/rodar-project/rodar_release/compare/v1.2.0...v1.2.1
-[1.2.0]: https://github.com/rodar-project/rodar_release/compare/v1.1.0...v1.2.0
-[1.1.0]: https://github.com/rodar-project/rodar_release/compare/v1.0.3...v1.1.0
-[1.0.3]: https://github.com/rodar-project/rodar_release/compare/v1.0.2...v1.0.3
-[1.0.2]: https://github.com/rodar-project/rodar_release/compare/v1.0.1...v1.0.2
-[1.0.1]: https://github.com/rodar-project/rodar_release/compare/v1.0.0...v1.0.1
-[1.0.0]: https://github.com/rodar-project/rodar_release/compare/v0.2.1...v1.0.0
-[0.2.1]: https://github.com/rodar-project/rodar_release/compare/v0.2.0...v0.2.1
-[0.2.0]: https://github.com/rodar-project/rodar_release/compare/v0.1.0...v0.2.0
-[0.1.0]: https://github.com/rodar-project/rodar_release/releases/tag/v0.1.0
+[Unreleased]: https://github.com/relex-project/relex/compare/v1.6.0...HEAD
+[1.6.0]: https://github.com/relex-project/relex/compare/v1.6.0-dev.1...v1.6.0
+[1.6.0-dev.1]: https://github.com/relex-project/relex/compare/v1.5.0...v1.6.0-dev.1
+[1.5.0]: https://github.com/relex-project/relex/compare/v1.4.0...v1.5.0
+[1.4.0]: https://github.com/relex-project/relex/compare/v1.3.0...v1.4.0
+[1.3.0]: https://github.com/relex-project/relex/compare/v1.2.3...v1.3.0
+[1.2.3]: https://github.com/relex-project/relex/compare/v1.2.2...v1.2.3
+[1.2.2]: https://github.com/relex-project/relex/compare/v1.2.1...v1.2.2
+[1.2.1]: https://github.com/relex-project/relex/compare/v1.2.0...v1.2.1
+[1.2.0]: https://github.com/relex-project/relex/compare/v1.1.0...v1.2.0
+[1.1.0]: https://github.com/relex-project/relex/compare/v1.0.3...v1.1.0
+[1.0.3]: https://github.com/relex-project/relex/compare/v1.0.2...v1.0.3
+[1.0.2]: https://github.com/relex-project/relex/compare/v1.0.1...v1.0.2
+[1.0.1]: https://github.com/relex-project/relex/compare/v1.0.0...v1.0.1
+[1.0.0]: https://github.com/relex-project/relex/compare/v0.2.1...v1.0.0
+[0.2.1]: https://github.com/relex-project/relex/compare/v0.2.0...v0.2.1
+[0.2.0]: https://github.com/relex-project/relex/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/relex-project/relex/releases/tag/v0.1.0

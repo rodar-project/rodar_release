@@ -1,11 +1,11 @@
-defmodule Mix.Tasks.RodarRelease.Merge do
+defmodule Mix.Tasks.Relex.Merge do
   @shortdoc "Promote a pre-release version after merging into a stable branch"
   @moduledoc """
   Promotes a pre-release version to stable after merging a development branch.
 
-      mix rodar_release.merge              # 1.5.1-dev.3 → 1.5.1
-      mix rodar_release.merge minor        # 1.5.1-dev.3 → 1.6.0
-      mix rodar_release.merge major        # 1.5.1-dev.3 → 2.0.0
+      mix relex.merge              # 1.5.1-dev.3 → 1.5.1
+      mix relex.merge minor        # 1.5.1-dev.3 → 1.6.0
+      mix relex.merge major        # 1.5.1-dev.3 → 2.0.0
 
   Without a segment argument, the pre-release suffix is stripped and the base
   version is used as-is. Pass `patch`, `minor`, or `major` to bump higher.
@@ -21,7 +21,7 @@ defmodule Mix.Tasks.RodarRelease.Merge do
   """
   use Mix.Task
 
-  import RodarRelease.Helpers
+  import Relex.Helpers
 
   @impl Mix.Task
   def run(args) do
@@ -35,14 +35,14 @@ defmodule Mix.Tasks.RodarRelease.Merge do
 
     validate_stable_branch!(branch)
 
-    current_version = RodarRelease.read_version()
+    current_version = Relex.read_version()
     validate_has_pre!(current_version)
 
     unless dry_run do
       validate_clean_working_tree!()
     end
 
-    release_version = RodarRelease.promote(current_version, segment)
+    release_version = Relex.promote(current_version, segment)
     today = Date.utc_today() |> Date.to_iso8601()
 
     Mix.shell().info("Merge promotion plan:")
@@ -88,7 +88,7 @@ defmodule Mix.Tasks.RodarRelease.Merge do
   defp parse_segment!(_) do
     Mix.raise(
       "Too many arguments.\n\n" <>
-        "Usage: mix rodar_release.merge [patch|minor|major]"
+        "Usage: mix relex.merge [patch|minor|major]"
     )
   end
 
@@ -102,10 +102,10 @@ defmodule Mix.Tasks.RodarRelease.Merge do
   end
 
   defp validate_has_pre!(version) do
-    unless RodarRelease.has_pre?(version) do
+    unless Relex.has_pre?(version) do
       Mix.raise(
         "Current version #{version} is not a pre-release.\n" <>
-          "Use `mix rodar_release.patch|minor|major` for regular releases."
+          "Use `mix relex.patch|minor|major` for regular releases."
       )
     end
   end
